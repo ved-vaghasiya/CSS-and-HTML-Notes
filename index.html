@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwritten Diary Notes — HTML & CSS</title>
+    <style>
+        :root {
+            --bg-dark: #12141a;
+            --panel-bg: #1c1f26;
+            --accent-html: #2563eb;
+            --accent-css: #7c3aed;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        /* Top Navigation Header */
+        header {
+            height: 56px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid #2d3340;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 20;
+            flex-shrink: 0;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .logo-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .tab-group {
+            display: flex;
+            background: #11141c;
+            padding: 4px;
+            border-radius: 8px;
+            gap: 4px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 6px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active.html-tab {
+            background: var(--accent-html);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.4);
+        }
+        .tab-btn.active.css-tab {
+            background: var(--accent-css);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(124,58,237,0.4);
+        }
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-download {
+            background: #22c55e;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .btn-download:hover {
+            background: #16a34a;
+        }
+        /* Main Layout */
+        .main-container {
+            flex: 1;
+            display: flex;
+            height: calc(100vh - 56px);
+            overflow: hidden;
+        }
+        /* Sidebar Jump Menu */
+        .sidebar {
+            width: 240px;
+            background: #161820;
+            border-right: 1px solid #282d38;
+            overflow-y: auto;
+            padding: 12px 10px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .sidebar-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            padding: 6px 8px;
+            font-weight: 700;
+        }
+        .jump-btn {
+            background: transparent;
+            border: none;
+            color: #cbd5e1;
+            text-align: left;
+            padding: 8px 10px;
+            font-size: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .jump-btn:hover {
+            background: #252b38;
+            color: #ffffff;
+        }
+        .jump-btn .day-pill {
+            background: #2e3545;
+            color: #94a3b8;
+            font-size: 10.5px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        /* Frame Viewport */
+        .viewport {
+            flex: 1;
+            height: 100%;
+            background: #1c1e24;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #20222a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <span class="logo-badge">CSE (AI) 2026</span>
+            <span class="logo-title">Handwritten Diary Study Notes</span>
+        </div>
+
+        <div class="tab-group">
+            <button class="tab-btn active html-tab" onclick="switchSubject('html')">📄 HTML Notes (16 Pages)</button>
+            <button class="tab-btn css-tab" onclick="switchSubject('css')">🎨 CSS Notes (28 Pages)</button>
+        </div>
+
+        <div class="action-group">
+            <a id="download-btn" class="btn-download" href="/HTML_Notes.pdf" download="HTML_Notes.pdf">
+                ⬇ Download PDF
+            </a>
+            <a id="popout-btn" class="tab-btn" style="background:#282f3d; color:#e2e8f0; text-decoration:none;" href="/html_notes.html" target="_blank">
+                ↗ Fullscreen
+            </a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar" id="sidebar-menu">
+            <!-- Dynamic days list -->
+        </aside>
+
+        <main class="viewport">
+            <iframe id="notes-frame" src="/html_notes.html"></iframe>
+        </main>
+    </div>
+
+    <script>
+        const htmlTopics = [
+            "Day 1: Intro & Structure",
+            "Day 2: Headings & Paragraphs",
+            "Day 3: Formatting Elements",
+            "Day 4: Style & CSS Methods",
+            "Day 5: HTML Linking",
+            "Day 6: Images",
+            "Day 7: Tables",
+            "Day 8: Lists",
+            "Day 9: Block vs Inline",
+            "Day 10: Iframes & Code",
+            "Day 11: Semantic HTML",
+            "Day 12: Entities & Symbols",
+            "Day 13: Forms 1 (Inputs)",
+            "Day 14: Forms 2 (Controls)",
+            "Day 15: Media (Audio & Video)",
+            "Day 16: Meta Tags & SEO"
+        ];
+
+        const cssTopics = [
+            "Day 1: Intro & Selectors",
+            "Day 2: Comments & Errors",
+            "Day 3: Colors & Backgrounds",
+            "Day 4: Borders & Radius",
+            "Day 5: Margin, Padding & Box Model",
+            "Day 6: Width, Height & Max-Width",
+            "Day 7: Outline & Text Styling",
+            "Day 8: Fonts & Icons",
+            "Day 9: Links & Lists",
+            "Day 10: Tables & Display",
+            "Day 11: CSS Positions",
+            "Day 12: Z-Index & Overflow",
+            "Day 13: Floats & Alignment",
+            "Day 14: Combinators",
+            "Day 15: Pseudo-classes & Elements",
+            "Day 16: Navbars & Dropdowns",
+            "Day 17: Opacity & Attributes",
+            "Day 18: Forms & Counters",
+            "Day 19: Units & Specificity",
+            "Day 20: Performance & Gradients",
+            "Day 21: Shadows & Text Effects",
+            "Day 22: 2D & 3D Transforms",
+            "Day 23: Transitions & Animations",
+            "Day 24: Tooltips & Image Styling",
+            "Day 25: Filters & Multi-columns",
+            "Day 26: CSS Variables",
+            "Day 27: Flexbox Layout",
+            "Day 28: Media Queries & Grid"
+        ];
+
+        let currentSubject = 'html';
+
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar-menu');
+            sidebar.innerHTML = '<div class="sidebar-title">TABLE OF CONTENTS</div>';
+            const topics = currentSubject === 'html' ? htmlTopics : cssTopics;
+
+            topics.forEach((t, index) => {
+                const dayNum = index + 1;
+                const targetId = 'day-' + dayNum;
+                const parts = t.split(': ');
+                const dayLabel = parts[0];
+                const topicTitle = parts[1];
+
+                const btn = document.createElement('button');
+                btn.className = 'jump-btn';
+                btn.innerHTML = `<span class="day-pill">${dayLabel}</span> ${topicTitle}`;
+                btn.onclick = () => {
+                    const frame = document.getElementById('notes-frame');
+                    frame.contentWindow.location.hash = targetId;
+                };
+                sidebar.appendChild(btn);
+            });
+        }
+
+        function switchSubject(subject) {
+            currentSubject = subject;
+            const htmlBtn = document.querySelector('.html-tab');
+            const cssBtn = document.querySelector('.css-tab');
+            const frame = document.getElementById('notes-frame');
+            const downloadBtn = document.getElementById('download-btn');
+            const popoutBtn = document.getElementById('popout-btn');
+
+            if (subject === 'html') {
+                htmlBtn.classList.add('active');
+                cssBtn.classList.remove('active');
+                frame.src = '/html_notes.html';
+                popoutBtn.href = '/html_notes.html';
+                downloadBtn.href = '/HTML_Notes.pdf';
+                downloadBtn.download = 'HTML_Notes.pdf';
+                downloadBtn.innerHTML = '⬇ Download HTML Notes PDF';
+            } else {
+                cssBtn.classList.add('active');
+                htmlBtn.classList.remove('active');
+                frame.src = '/css_notes.html';
+                popoutBtn.href = '/css_notes.html';
+                downloadBtn.href = '/CSS_Notes.pdf';
+                downloadBtn.download = 'CSS_Notes.pdf';
+                downloadBtn.innerHTML = '⬇ Download CSS Notes PDF';
+            }
+            renderSidebar();
+        }
+
+        renderSidebar();
+    </script>
+</body>
+</html>

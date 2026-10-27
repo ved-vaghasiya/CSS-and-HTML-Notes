@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CSS Handwritten Diary Study Notes</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Noto+Sans+Gujarati:wght@500;700&display=swap');
+
+@page {
+    size: 210mm 297mm; /* A4 */
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #2b2b2b;
+    font-family: 'Patrick Hand', 'Noto Sans Gujarati', cursive, sans-serif;
+    color: #173366;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.diary-page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    background-color: #fcfbf6;
+    background-image: 
+        radial-gradient(#ede8db 15%, transparent 16%),
+        radial-gradient(#ede8db 15%, transparent 16%);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+    padding: 14mm 16mm 14mm 26mm;
+    overflow: hidden;
+    page-break-after: always;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    margin: 15px auto;
+}
+
+@media print {
+    body {
+        background: transparent;
+    }
+    .diary-page {
+        margin: 0;
+        box-shadow: none;
+    }
+}
+
+/* Notebook Ruled Lines */
+.ruled-lines-layer {
+    position: absolute;
+    top: 34mm;
+    left: 0;
+    right: 0;
+    bottom: 18mm;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #cbd5e1 31px,
+        #cbd5e1 32px
+    );
+    z-index: 1;
+}
+
+/* Vertical Pink/Red Margin Line */
+.margin-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 22mm;
+    width: 2px;
+    background-color: #f87171;
+    z-index: 2;
+}
+
+.margin-line-secondary {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 23.5mm;
+    width: 1px;
+    background-color: #fca5a5;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+/* Diary Header */
+.diary-header {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2.5px solid #d1d5db;
+    padding-bottom: 4px;
+    margin-bottom: 5mm;
+    margin-left: 2mm;
+}
+
+.header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.day-badge {
+    font-family: 'Caveat', cursive;
+    font-size: 36px;
+    font-weight: 700;
+    color: #5b21b6;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.topic-title {
+    font-family: 'Caveat', cursive;
+    font-size: 25px;
+    font-weight: 700;
+    color: #1e1b4b;
+    line-height: 1;
+}
+
+.header-right {
+    text-align: right;
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.2;
+}
+
+.header-right .year {
+    font-size: 19px;
+    font-weight: 700;
+    color: #334155;
+}
+
+/* Thumb Tab on right edge */
+.diary-tab {
+    position: absolute;
+    right: 0;
+    top: 42mm;
+    background-color: #6d28d9;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 10px 4px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    border-radius: 6px 0 0 6px;
+    box-shadow: -2px 2px 4px rgba(0,0,0,0.15);
+    letter-spacing: 1.5px;
+    z-index: 10;
+}
+
+/* Content Area */
+.page-content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 3mm;
+}
+
+.topic-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.topic-heading {
+    font-family: 'Caveat', cursive;
+    font-size: 23px;
+    font-weight: 700;
+    color: #3b0764;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.topic-heading span.dot {
+    font-size: 20px;
+    color: #7c3aed;
+}
+
+.sub-point {
+    font-size: 18px;
+    line-height: 1.35;
+    color: #1e1b4b;
+    margin: 1px 0;
+    padding-left: 8px;
+}
+
+.sub-point .arrow {
+    color: #7c3aed;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.gujarati-note {
+    font-family: 'Noto Sans Gujarati', sans-serif;
+    color: #4c1d95;
+    font-size: 15px;
+    background: #f5f3ff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.real-life-box {
+    font-size: 17.5px;
+    color: #475569;
+    padding: 2px 10px;
+    margin: 2px 0 2px 8px;
+    border-left: 3px solid #c4b5fd;
+    font-style: italic;
+}
+
+.code-row {
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    border-radius: 5px;
+    padding: 3px 10px;
+    margin: 2px 0 2px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Patrick Hand', monospace;
+    font-size: 17.5px;
+    color: #0f172a;
+}
+
+.code-snippet {
+    color: #4338ca;
+    font-weight: 600;
+}
+
+.code-output {
+    color: #15803d;
+    font-weight: 600;
+    background: #dcfce7;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 17px;
+}
+
+.remember-line {
+    font-size: 17px;
+    color: #4338ca;
+    background: #eef2ff;
+    border-left: 3px solid #6366f1;
+    padding: 2px 8px;
+    margin: 1px 0 1px 8px;
+    border-radius: 0 4px 4px 0;
+}
+
+.mistake-line {
+    font-size: 17px;
+    color: #991b1b;
+    background: #fef2f2;
+    border-left: 3px solid #ef4444;
+    padding: 2px 8px;
+    margin: 1px 0 1px 8px;
+    border-radius: 0 4px 4px 0;
+}
+
+.diagram-box {
+    margin: 3px 0 3px 10px;
+    padding: 4px 10px;
+    border: 1.5px solid #64748b;
+    border-radius: 5px;
+    background: #ffffff;
+    display: inline-block;
+    font-size: 15.5px;
+    color: #1e293b;
+    line-height: 1.25;
+}
+
+.diary-footer {
+    position: absolute;
+    bottom: 7mm;
+    left: 26mm;
+    right: 16mm;
+    text-align: center;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 15.5px;
+    color: #64748b;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 4px;
+    z-index: 5;
+    font-style: italic;
+}
+
+</style>
+</head>
+<body>
+<div class="diary-page" id="day-1">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 1</span>
+                    <span class="topic-title">• Intro to CSS & Selectors</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Introduction to CSS</div>
+                <div class="sub-point"><span class="arrow">→</span> Stands for <u>Cascading Style Sheets</u>. <span class="gujarati-note">(વેબસાઇટ નો શણગાર - decoration and styling)</span></div><div class="sub-point"><span class="arrow">→</span> Controls layout, colors, typography, spacing, and animations across web pages. </div><div class="sub-point"><span class="arrow">→</span> Syntax: <code>selector { property: value; }</code> </div>
+                <div class="real-life-box">🎨 Real-life: HTML is building a bare concrete house; CSS is plaster, colorful paint, and furniture.</div>
+                
+                <div class="code-row">
+                    <span class="code-snippet">h1 { color: blue; font-size: 24px; }</span>
+                    <span class="code-output">:- Makes all &lt;h1&gt; titles blue and 24px</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always enclose property-value pairs inside curly braces { } and end lines with semicolons (;).</div>
+                <div class="mistake-line"><b>Mistake:</b> Using '=' instead of ':' (e.g. writing color=red; instead of color: red;).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Core Selectors: Element, Class & ID</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Element Selector:</b> Targets all tags of that type (e.g. <code>p { ... }</code>). </div><div class="sub-point"><span class="arrow">→</span> <b>Class Selector (.name):</b> Reusable style across multiple elements <span class="gujarati-note">(વર્ગ - ગમે તેટલા તત્વો પર વાપરી શકાય)</span></div><div class="sub-point"><span class="arrow">→</span> <b>ID Selector (#name):</b> Targets exactly ONE unique element per page <span class="gujarati-note">(અનન્ય ઓળખ - એક જ એલિમેન્ટ માટે)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.btn { padding: 8px; } | #header { top: 0; }</span>
+                    <span class="code-output">:- Reusable button | Single unique header</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Classes start with a dot (.), IDs start with a hash (#).</div>
+                <div class="mistake-line"><b>Mistake:</b> Reusing the same ID on multiple HTML elements; IDs must be strictly unique!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Design is not just what it looks like and feels like. Design is how it works"
+            </div>
+        </div><div class="diary-page" id="day-2">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 2</span>
+                    <span class="topic-title">• Comments & Error Handling</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Comments</div>
+                <div class="sub-point"><span class="arrow">→</span> Written using <code>/* comment here */</code> syntax. <span class="gujarati-note">(કોડ સમજવા માટે નોંધ)</span></div><div class="sub-point"><span class="arrow">→</span> Can span single or multiple lines; completely ignored by the browser. </div><div class="sub-point"><span class="arrow">→</span> Used to organize sections: Header, Navbar, Footer, Media Queries. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">/* Main Button Style */ .btn { ... }</span>
+                    <span class="code-output">:- Explains purpose of the CSS rule</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> CSS does NOT support // single-line comments! Always use /* ... */.</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing HTML comments &lt;!-- --&gt; or JavaScript // inside CSS files.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Error Handling</div>
+                <div class="sub-point"><span class="arrow">→</span> CSS fails silently: it never throws fatal crashes or alerts. <span class="gujarati-note">(ભૂલ હોય તો તે લાઈન છોડી આગળ વધે)</span></div><div class="sub-point"><span class="arrow">→</span> If a browser encounters an unknown property or invalid value, it simply ignores that line and applies the rest. </div><div class="sub-point"><span class="arrow">→</span> Allows new modern CSS features to be used safely with graceful fallback for older browsers. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">p { colr: red; font-weight: bold; }</span>
+                    <span class="code-output">:- 'colr' typo ignored; bold is still applied!</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use browser DevTools (Inspect Element) to spot strikethrough warnings on invalid properties.</div>
+                <div class="mistake-line"><b>Mistake:</b> Assuming silent CSS means code is error-free; always inspect in DevTools!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Clarity of mind means clarity of code"
+            </div>
+        </div><div class="diary-page" id="day-3">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 3</span>
+                    <span class="topic-title">• Colors & Backgrounds</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Color Formats in CSS</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Named Colors:</b> red, blue, coral, darkslateblue (140+ predefined names). </div><div class="sub-point"><span class="arrow">→</span> <b>HEX Code:</b> #ff0000 (Red), #ffffff (White), #000000 (Black). </div><div class="sub-point"><span class="arrow">→</span> <b>RGB & RGBA:</b> <code>rgb(255, 0, 0)</code> and <code>rgba(0, 0, 0, 0.5)</code> <span class="gujarati-note">(પારદર્શક રંગ - transparency)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">color: rgba(0, 100, 255, 0.7);</span>
+                    <span class="code-output">:- Blue with 70% opacity</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> The 'A' in RGBA stands for Alpha (opacity from 0.0 transparent to 1.0 solid).</div>
+                <div class="mistake-line"><b>Mistake:</b> Confusing color (text color) with background-color (box fill color).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Background Properties</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>background-color:</b> Fills background with a solid color. <span class="gujarati-note">(પાછળ નો રંગ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>background-image:</b> <code>url('bg.jpg')</code> loads an image. <span class="gujarati-note">(પાછળ નો ફોટો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>background-repeat:</b> <code>no-repeat</code> prevents tiling. </div><div class="sub-point"><span class="arrow">→</span> <b>background-size:</b> <code>cover</code> scales image to fill the entire container proportionally. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">background: url('bg.jpg') no-repeat center/cover;</span>
+                    <span class="code-output">:- Perfect full-cover background image</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always provide a fallback background-color in case the background image fails to load!</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting no-repeat; small background images will tile across the whole page by default.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Colors, like features, follow the changes of the emotions"
+            </div>
+        </div><div class="diary-page" id="day-4">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 4</span>
+                    <span class="topic-title">• Borders & Rounded Corners</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Borders</div>
+                <div class="sub-point"><span class="arrow">→</span> Surrounds elements with a line. Has width, style, and color. <span class="gujarati-note">(કિનારી / બોર્ડર)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Styles:</b> solid, dashed, dotted, double, groove, none. </div><div class="sub-point"><span class="arrow">→</span> <b>Shorthand:</b> <code>border: 2px solid #3b82f6;</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">border-bottom: 3px dashed red;</span>
+                    <span class="code-output">:- Dashed red underline below the box</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> If border-style is not specified, border defaults to 'none' and will NOT show!</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing border: 2px red; without specifying 'solid' or 'dashed' (border won't appear!).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Rounded Corners: border-radius</div>
+                <div class="sub-point"><span class="arrow">→</span> Curves the sharp 90-degree corners of any box or button. <span class="gujarati-note">(ખૂણા ગોળ કરવા)</span></div><div class="sub-point"><span class="arrow">→</span> Small curves: <code>border-radius: 6px;</code> </div><div class="sub-point"><span class="arrow">→</span> Pill buttons: <code>border-radius: 9999px;</code> </div><div class="sub-point"><span class="arrow">→</span> Perfect circle: <code>width: 100px; height: 100px; border-radius: 50%;</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">border-radius: 50%; width: 80px; height: 80px;</span>
+                    <span class="code-output">:- Turns square avatar into a perfect circle</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> For border-radius: 50% to produce a circle, width and height MUST be equal!</div>
+                <div class="mistake-line"><b>Mistake:</b> Setting border-radius: 50% on a rectangular image; it becomes an oval, not a circle.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Good boundaries create clarity and pleasant aesthetics"
+            </div>
+        </div><div class="diary-page" id="day-5">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 5</span>
+                    <span class="topic-title">• Margin, Padding & Box Model</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Margin vs Padding</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Margin:</b> Space <u>OUTSIDE</u> the border (pushes neighbor elements away). <span class="gujarati-note">(બોર્ડર ની બહાર ની ખાલી જગ્યા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Padding:</b> Space <u>INSIDE</u> the border (cushions text inside the box). <span class="gujarati-note">(બોર્ડર ની અંદર ની ખાલી જગ્યા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Shorthand (Clockwise):</b> <code>margin: Top Right Bottom Left;</code> (TRBL) </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">padding: 10px 20px;</span>
+                    <span class="code-output">:- 10px Top/Bottom, 20px Left/Right</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> margin: 0 auto; centers a block element horizontally within its parent container!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using margin when you want to increase clickable area of a button; use padding instead.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> The CSS Box Model & box-sizing</div>
+                <div class="sub-point"><span class="arrow">→</span> Every element is a rectangular box made of: Content → Padding → Border → Margin. </div><div class="sub-point"><span class="arrow">→</span> <b>Standard box-sizing: content-box</b> adds padding & border on TOP of width (causes horizontal overflow!). </div><div class="sub-point"><span class="arrow">→</span> <b>border-box:</b> Keeps total width fixed; padding and border stay INSIDE the specified width. <span class="gujarati-note">(સાઈઝ બહાર ન નીકળે)</span></div>
+                
+                <div class="diagram-box">+---------------------------------------+<br>| Margin (Outside Space)                |<br>|   +-------------------------------+   |<br>|   | Border                        |   |<br>|   |   +-----------------------+   |   |<br>|   |   | Padding (Inside Space)|   |   |<br>|   |   |   +---------------+   |   |   |<br>|   |   |   | Content       |   |   |   |<br>+---+---+---+---------------+---+---+---+</div>
+                
+                <div class="remember-line"><b>Remember:</b> Always put * { box-sizing: border-box; } at the top of every CSS project!</div>
+                <div class="mistake-line"><b>Mistake:</b> Leaving default content-box; adding 20px padding to a 100% wide box creates scrollbars.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Space is the breath of art"
+            </div>
+        </div><div class="diary-page" id="day-6">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 6</span>
+                    <span class="topic-title">• Width, Height & Max-Width</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Width & Height Properties</div>
+                <div class="sub-point"><span class="arrow">→</span> Sets the width and height of block-level and inline-block elements. <span class="gujarati-note">(પહોળાઈ અને ઊંચાઈ)</span></div><div class="sub-point"><span class="arrow">→</span> Can be set in fixed units (<code>px</code>) or relative units (<code>%, vh, vw</code>). </div><div class="sub-point"><span class="arrow">→</span> <code>auto</code> lets browser calculate based on content size. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">div { width: 50%; height: 200px; }</span>
+                    <span class="code-output">:- Half width of screen, 200px tall</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Inline elements (like &lt;span&gt; or &lt;a&gt;) IGNORE width and height properties!</div>
+                <div class="mistake-line"><b>Mistake:</b> Setting hardcoded height in pixels on text cards; content will overflow when text grows.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> max-width for Responsive Design</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>max-width:</b> Restricts element from growing beyond a limit, but allows it to shrink on smaller screens. <span class="gujarati-note">(મહત્તમ પહોળાઈ - સ્ક્રીન નાની થાય ત્યારે સંકોચાય)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Responsive images rule:</b> <code>img { max-width: 100%; height: auto; }</code> prevents image from spilling off screen. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.container { max-width: 1200px; width: 100%; margin: 0 auto; }</span>
+                    <span class="code-output">:- Responsive centered website container</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Prefer max-width over fixed width for main layout wrappers and images!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using width: 1200px on mobile; screen will force a clumsy horizontal scrollbar.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Flexibility is the key to stability"
+            </div>
+        </div><div class="diary-page" id="day-7">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 7</span>
+                    <span class="topic-title">• Outline & Text Styling</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Outline vs Border</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Outline:</b> Drawn outside the border edge; does NOT take up any layout space. <span class="gujarati-note">(બહાર ની વધારાની લાઈન)</span></div><div class="sub-point"><span class="arrow">→</span> Does not affect document flow or push adjacent elements. </div><div class="sub-point"><span class="arrow">→</span> Most commonly used for accessibility keyboard focus indicators (<code>:focus-visible</code>). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">input:focus { outline: 2px solid blue; }</span>
+                    <span class="code-output">:- Blue highlight box when user clicks input</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Never set outline: none without providing an alternative focus indicator for keyboard users!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using outline: none on forms; blind and keyboard users will lose track of where they are.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Text Formatting Properties</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>color:</b> Text color | <b>text-align:</b> left, center, right, justify. <span class="gujarati-note">(લખાણ ની ગોઠવણી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>text-decoration:</b> none (removes link underline), underline, line-through. </div><div class="sub-point"><span class="arrow">→</span> <b>text-transform:</b> uppercase, lowercase, capitalize. <span class="gujarati-note">(મોટા કે નાના અક્ષરો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>line-height:</b> Distance between lines of text (ideal: 1.5 to 1.6 for readability). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">a { text-decoration: none; text-transform: uppercase; }</span>
+                    <span class="code-output">:- Clean uppercase links without underline</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always use line-height: 1.5+ on body text for comfortable reading experience.</div>
+                <div class="mistake-line"><b>Mistake:</b> Using text-align: justify on websites; it creates awkward 'rivers' of empty white gaps.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Type is a beautiful group of letters, not a group of beautiful letters"
+            </div>
+        </div><div class="diary-page" id="day-8">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 8</span>
+                    <span class="topic-title">• Fonts & Icons</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Typography & Font Properties</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>font-family:</b> Specifies font face with fallbacks: <code>'Inter', Arial, sans-serif;</code> <span class="gujarati-note">(ફોન્ટ ની શૈલી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>font-size:</b> Text size (e.g. <code>16px, 1.25rem</code>). </div><div class="sub-point"><span class="arrow">→</span> <b>font-weight:</b> Thickness from thin (100), regular (400), semi-bold (600), to bold (700). </div><div class="sub-point"><span class="arrow">→</span> <b>Google Fonts:</b> Import via <code>@import url('...');</code> in CSS or &lt;link&gt; in HTML. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">font-family: 'Patrick Hand', cursive, sans-serif;</span>
+                    <span class="code-output">:- Applies handwriting font with fallbacks</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always include a generic fallback (sans-serif, serif, or monospace) at the end of font-family!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using 5 different font families on one webpage; stick to 1 or 2 fonts maximum.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Web Icons (FontAwesome & SVG)</div>
+                <div class="sub-point"><span class="arrow">→</span> Icons can be added using icon font libraries (Font Awesome) or inline SVGs. <span class="gujarati-note">(આઇકોન્સ - પ્રતીકો)</span></div><div class="sub-point"><span class="arrow">→</span> Icon fonts can be styled just like regular text using <code>font-size</code> and <code>color</code>! </div><div class="sub-point"><span class="arrow">→</span> SVGs provide sharp crisp rendering on all retina high-res screens. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.icon { font-size: 24px; color: #f59e0b; }</span>
+                    <span class="code-output">:- Sizes and colors icon like normal text</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> SVG icons are resolution-independent and will never get blurry on zoom!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using low-res PNG files for icons; they look pixelated on mobile phones.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Words have meaning, type has character"
+            </div>
+        </div><div class="diary-page" id="day-9">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 9</span>
+                    <span class="topic-title">• Links & Lists Styling</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Styling Hyperlink States (LVHA Rule)</div>
+                <div class="sub-point"><span class="arrow">→</span> Links have 4 interactive pseudo-classes: <span class="gujarati-note">(લિંક ની અલગ અલગ સ્થિતિ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>:link</b> (normal unvisited) → <b>:visited</b> (already visited page) </div><div class="sub-point"><span class="arrow">→</span> <b>:hover</b> (mouse over) → <b>:active</b> (moment link is clicked). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">a:hover { color: orange; text-decoration: underline; }</span>
+                    <span class="code-output">:- Highlights when cursor hovers</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Follow the LVHA order strictly in CSS: :link → :visited → :hover → :active!</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing :hover before :link in CSS; the hover effect will be overridden and fail!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Styling HTML Lists</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>list-style-type:</b> none, disc, circle, square, decimal, lower-alpha. <span class="gujarati-note">(લિસ્ટ ના ટપકાં બદલવા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>list-style: none;</b> Removes default black dots and numbers. </div><div class="sub-point"><span class="arrow">→</span> To reset a list for navbars: <code>list-style: none; padding: 0; margin: 0;</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">ul.nav { list-style: none; display: flex; gap: 15px; }</span>
+                    <span class="code-output">:- Turns list into horizontal navigation bar</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Browser adds default padding-left (40px) to &lt;ul&gt;; remember to zero it out when resetting!</div>
+                <div class="mistake-line"><b>Mistake:</b> Setting list-style: none and wondering why items are indented (forgot to set padding: 0;).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Navigation should be a guide, not a puzzle"
+            </div>
+        </div><div class="diary-page" id="day-10">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 10</span>
+                    <span class="topic-title">• Tables & Display Property</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Table Styling</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>border-collapse: collapse;</b> Merges double border lines into a single clean line. <span class="gujarati-note">(ડબલ લાઈન ભેગી કરી સિંગલ લાઈન બનાવવી)</span></div><div class="sub-point"><span class="arrow">→</span> Zebra striping: <code>tr:nth-child(even) { background: #f1f5f9; }</code> <span class="gujarati-note">(એક પછી એક પટ્ટા વાળો રંગ)</span></div><div class="sub-point"><span class="arrow">→</span> Hover effect: <code>tr:hover { background: #e2e8f0; }</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">table { width: 100%; border-collapse: collapse; }</span>
+                    <span class="code-output">:- Clean, full-width single-bordered table</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Without border-collapse: collapse, HTML tables show an ugly double border around cells!</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting to add padding to &lt;th&gt; and &lt;td&gt;; text will touch the border lines.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> The CSS display Property</div>
+                <div class="sub-point"><span class="arrow">→</span> Controls how an element is rendered in page flow. <span class="gujarati-note">(એલિમેન્ટ નો પ્રદર્શન પ્રકાર)</span></div><div class="sub-point"><span class="arrow">→</span> <b>block:</b> Full width, starts new line (div, p). </div><div class="sub-point"><span class="arrow">→</span> <b>inline:</b> Flow within sentence, ignores width/height (span, a). </div><div class="sub-point"><span class="arrow">→</span> <b>inline-block:</b> Flows like inline, BUT respects width, height, and margins! </div><div class="sub-point"><span class="arrow">→</span> <b>none:</b> Completely hides element and removes its space from document. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.btn { display: inline-block; padding: 10px 20px; }</span>
+                    <span class="code-output">:- Allows padding & width on link buttons</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> display: none hides element completely; visibility: hidden hides it but reserves empty space!</div>
+                <div class="mistake-line"><b>Mistake:</b> Trying to apply width & top/bottom margin to inline elements without setting inline-block.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Structure enables freedom of presentation"
+            </div>
+        </div><div class="diary-page" id="day-11">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 11</span>
+                    <span class="topic-title">• CSS Positions</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Static, Relative & Absolute Positioning</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>position: static:</b> Default normal page flow; top/left/right/bottom have no effect. <span class="gujarati-note">(સામાન્ય ગોઠવણી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>position: relative:</b> Shifted relative to its normal position without disturbing others. <span class="gujarati-note">(પોતાની જગ્યા થી ખસવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>position: absolute:</b> Removed from normal flow; positioned relative to nearest <u>positioned parent</u> (with relative/absolute). <span class="gujarati-note">(પેરેન્ટ ના આધારે ગમે ત્યાં મૂકવું)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.parent { position: relative; } .badge { position: absolute; top: -5px; right: -5px; }</span>
+                    <span class="code-output">:- Notification badge on top corner</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always give position: relative to parent before putting position: absolute on children!</div>
+                <div class="mistake-line"><b>Mistake:</b> Setting position: absolute without a relative parent; the child jumps to the top of &lt;body&gt;!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Fixed & Sticky Positioning</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>position: fixed:</b> Locked to the browser viewport; stays in exact place even when scrolling. <span class="gujarati-note">(સ્ક્રીન પર ચોંટી રહેવું - e.g. floating chat/navbar)</span></div><div class="sub-point"><span class="arrow">→</span> <b>position: sticky:</b> Scrolls normally until reaching offset (e.g. <code>top: 0</code>), then sticks like fixed! <span class="gujarati-note">(સ્ક્રોલ થતા ટોપ પર ચોંટી જવું)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">nav { position: sticky; top: 0; z-index: 100; }</span>
+                    <span class="code-output">:- Header that sticks to top when user scrolls down</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> position: sticky requires at least one direction offset (top, bottom, left, or right) to work!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using position: sticky inside an ancestor that has overflow: hidden (sticky will NOT work!).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Everything has its place, and everything in its place"
+            </div>
+        </div><div class="diary-page" id="day-12">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 12</span>
+                    <span class="topic-title">• Z-Index & Overflow</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Layer Stacking with z-index</div>
+                <div class="sub-point"><span class="arrow">→</span> Controls vertical stacking order of overlapping elements (3rd dimension Z-axis). <span class="gujarati-note">(કયું એલિમેન્ટ ઉપર દેખાશે - stacking order)</span></div><div class="sub-point"><span class="arrow">→</span> Higher number appears on top of lower numbers (e.g. <code>z-index: 10</code> beats <code>z-index: 1</code>). </div><div class="sub-point"><span class="arrow">→</span> Can be negative (<code>z-index: -1</code> places background behind content). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.modal { position: fixed; z-index: 1000; }</span>
+                    <span class="code-output">:- Pops up above all regular website elements</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> z-index ONLY works on elements with a position property (relative, absolute, fixed, sticky)!</div>
+                <div class="mistake-line"><b>Mistake:</b> Adding z-index: 9999 to position: static element and wondering why it doesn't come on top.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Handling Spills with overflow</div>
+                <div class="sub-point"><span class="arrow">→</span> Controls what happens when content exceeds its box container's width/height. <span class="gujarati-note">(લખાણ બોક્સ ની બહાર નીકળે ત્યારે)</span></div><div class="sub-point"><span class="arrow">→</span> <b>visible:</b> Default; spills outside the box boundary. </div><div class="sub-point"><span class="arrow">→</span> <b>hidden:</b> Clips the overflow; extra content becomes invisible. </div><div class="sub-point"><span class="arrow">→</span> <b>scroll:</b> Always shows scrollbars (even if content fits). </div><div class="sub-point"><span class="arrow">→</span> <b>auto:</b> Smart; adds scrollbar ONLY when content actually overflows. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.card-body { height: 200px; overflow-y: auto; }</span>
+                    <span class="code-output">:- Clean vertical scroll when text gets long</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use overflow: auto instead of overflow: scroll to avoid empty disabled scrollbars!</div>
+                <div class="mistake-line"><b>Mistake:</b> Setting overflow: hidden on dropdown menus; the dropdown list will be cut off and hidden!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Layers of depth create a world of perspective"
+            </div>
+        </div><div class="diary-page" id="day-13">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 13</span>
+                    <span class="topic-title">• Floats & Alignment</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Float, Clear & Clearfix</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>float: left / right:</b> Pushes element to side and lets text wrap around it (magazine style). <span class="gujarati-note">(એલિમેન્ટ ને ડાબે કે જમણે તરતું મૂકવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>clear: both:</b> Prevents following elements from wrapping around floated items. </div><div class="sub-point"><span class="arrow">→</span> <b>Clearfix Hack:</b> When parent collapses because all children are floated, add <code>overflow: auto;</code> or <code>.clearfix::after</code>. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">img { float: left; margin-right: 15px; }</span>
+                    <span class="code-output">:- Article text wraps neatly around the image</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use Flexbox and Grid for modern layouts; reserve float strictly for text-wrapping images!</div>
+                <div class="mistake-line"><b>Mistake:</b> Floating child elements without clearing; parent height collapses to 0px!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Centering & Alignment Methods</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Center inline text / images:</b> <code>text-align: center;</code> on parent container. <span class="gujarati-note">(લખાણ વચ્ચે લાવવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Center block box:</b> <code>margin: 0 auto; width: 600px;</code> on the block itself. <span class="gujarati-note">(બોક્સ ને વચ્ચે લાવવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Center both vertically & horizontally:</b> <code>display: flex; justify-content: center; align-items: center;</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.box { width: 400px; margin: 0 auto; }</span>
+                    <span class="code-output">:- Centers a 400px wide card on the screen</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> margin: 0 auto ONLY works if the element has a specified width and is display: block!</div>
+                <div class="mistake-line"><b>Mistake:</b> Putting text-align: center on a div expecting the div box itself to center (it only centers text inside!).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Balance is not something you find, it's something you create"
+            </div>
+        </div><div class="diary-page" id="day-14">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 14</span>
+                    <span class="topic-title">• CSS Combinators</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Descendant & Child Combinators</div>
+                <div class="sub-point"><span class="arrow">→</span> Combinators explain relationship between multiple selectors. <span class="gujarati-note">(સિલેક્ટર્સ વચ્ચે નો સંબંધ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Descendant Selector (space):</b> Targets ALL matching children, grandchildren, and deeper. <span class="gujarati-note">(અંદર ના તમામ વારસદારો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Child Selector (>):</b> Targets ONLY direct immediate children (1 level deep). <span class="gujarati-note">(ફક્ત સીધો પુત્ર - direct child)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">div p { ... } vs div > p { ... }</span>
+                    <span class="code-output">:- All paragraphs inside div vs only direct child paragraphs</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use child selector (>) when you want to avoid accidentally styling deeply nested elements!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using space selector when styling navbar dropdowns; sub-dropdown items inherit unwanted styles.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Sibling Combinators (+ and ~)</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Adjacent Sibling (+):</b> Targets the element immediately following another element. <span class="gujarati-note">(તરત પછી નું પડોશી એલિમેન્ટ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>General Sibling (~):</b> Targets all siblings that follow an element at the same level. <span class="gujarati-note">(પછી ના તમામ પડોશી એલિમેન્ટ્સ)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">h2 + p { font-size: 18px; font-weight: bold; }</span>
+                    <span class="code-output">:- Styles only the lead paragraph directly following h2</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> The adjacent sibling (+) is perfect for styling the first paragraph after a heading!</div>
+                <div class="mistake-line"><b>Mistake:</b> Thinking '+' targets preceding elements; combinators only target elements that appear AFTER.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Relationships define meaning in systems and code"
+            </div>
+        </div><div class="diary-page" id="day-15">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 15</span>
+                    <span class="topic-title">• Pseudo-classes & Elements</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Pseudo-Classes (:)</div>
+                <div class="sub-point"><span class="arrow">→</span> Defines a special STATE of an element (single colon <code>:</code>). <span class="gujarati-note">(એલિમેન્ટ ની ખાસ પરિસ્થિતિ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>:hover:</b> Mouse cursor is over the element. </div><div class="sub-point"><span class="arrow">→</span> <b>:focus:</b> Form input is actively selected. </div><div class="sub-point"><span class="arrow">→</span> <b>:first-child & :last-child:</b> First / last child of parent. </div><div class="sub-point"><span class="arrow">→</span> <b>:nth-child(2n):</b> Every even child (used for zebra striping tables). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">button:hover { transform: translateY(-2px); }</span>
+                    <span class="code-output">:- Subtle lift animation on mouse hover</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> :nth-child() is 1-indexed in CSS (first element is 1, not 0)!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using :nth-child(0); it matches nothing because CSS child counting starts at 1.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Pseudo-Elements (::)</div>
+                <div class="sub-point"><span class="arrow">→</span> Styles a specific PART of an element or creates virtual elements (double colon <code>::</code>). <span class="gujarati-note">(વર્ચ્યુઅલ એલિમેન્ટ બનાવવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>::before & ::after:</b> Injects decorative content before or after element without HTML tags! </div><div class="sub-point"><span class="arrow">→</span> <b>::first-letter:</b> Drop-cap initial letter like in storybooks. </div><div class="sub-point"><span class="arrow">→</span> <b>::selection:</b> Styles highlighted text selection color. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.star::after { content: ' ★'; color: gold; }</span>
+                    <span class="code-output">:- Adds gold star after text via CSS</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> ::before and ::after MUST always have <code>content: '';</code> (even if empty) to render!</div>
+                <div class="mistake-line"><b>Mistake:</b> Omitting the content property on ::before/::after; the pseudo-element will not display.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "The unseen details create the magic of modern interfaces"
+            </div>
+        </div><div class="diary-page" id="day-16">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 16</span>
+                    <span class="topic-title">• Navbars & Dropdowns</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Building Clean Navbars</div>
+                <div class="sub-point"><span class="arrow">→</span> Navbars are built using semantic <code>&lt;nav&gt;</code> containing a <code>&lt;ul&gt;</code>. <span class="gujarati-note">(નેવિગેશન મેનુ બાર)</span></div><div class="sub-point"><span class="arrow">→</span> Remove bullet dots: <code>list-style: none;</code> </div><div class="sub-point"><span class="arrow">→</span> Horizontal alignment: <code>display: flex; gap: 20px; align-items: center;</code> </div><div class="sub-point"><span class="arrow">→</span> Give links generous padding (<code>padding: 8px 16px;</code>) for comfortable tap targets on touchscreens. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">nav ul { display: flex; list-style: none; gap: 20px; }</span>
+                    <span class="code-output">:- Clean modern horizontal menu</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Make the entire link clickable with padding, rather than making user click tiny text letters!</div>
+                <div class="mistake-line"><b>Mistake:</b> Applying padding to &lt;li&gt; instead of &lt;a&gt;; only the letters will be clickable.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Pure CSS Dropdown Menus</div>
+                <div class="sub-point"><span class="arrow">→</span> Parent list item gets <code>position: relative;</code>. <span class="gujarati-note">(ડ્રોપડાઉન સબ-મેનુ)</span></div><div class="sub-point"><span class="arrow">→</span> Sub-menu gets <code>position: absolute; display: none; top: 100%; left: 0;</code> </div><div class="sub-point"><span class="arrow">→</span> On hover: <code>.nav-item:hover .sub-menu { display: block; }</code> reveals menu! </div>
+                
+                <div class="diagram-box">[ Products v ] ← parent (position: relative)<br>&nbsp;&nbsp;|-- [ Laptops ]<br>&nbsp;&nbsp;|-- [ Mobiles ] ← sub-menu (position: absolute; display: none)</div>
+                
+                <div class="remember-line"><b>Remember:</b> Add a subtle box-shadow (0 4px 12px rgba(0,0,0,0.15)) to dropdowns for depth!</div>
+                <div class="mistake-line"><b>Mistake:</b> Leaving a gap between parent button and dropdown list; mouse hover is lost when moving across gap.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Good navigation leads visitors where they want to go with zero friction"
+            </div>
+        </div><div class="diary-page" id="day-17">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 17</span>
+                    <span class="topic-title">• Opacity & Attribute Selectors</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Opacity vs RGBA Transparency</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>opacity:</b> Sets transparency of the ENTIRE element and all its children (0.0 to 1.0). <span class="gujarati-note">(આખું એલિમેન્ટ અને અંદર નું લખાણ ઝાંખું કરવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>rgba():</b> Sets transparency of background ONLY; text inside stays 100% solid and crisp! <span class="gujarati-note">(ફક્ત બેકગ્રાઉન્ડ પારદર્શક રાખવું)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">background: rgba(0, 0, 0, 0.6); color: #fff;</span>
+                    <span class="code-output">:- Semi-transparent dark card with crisp white text</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use rgba() or hex alpha for translucent backgrounds so text readability isn't ruined!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using opacity: 0.5 on a modal dialog box; text inside becomes washed out and hard to read.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Attribute Selectors</div>
+                <div class="sub-point"><span class="arrow">→</span> Targets elements based on presence or value of HTML attributes. <span class="gujarati-note">(એટ્રિબ્યુટ ના આધારે પસંદગી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>[target]:</b> Elements having target attribute. </div><div class="sub-point"><span class="arrow">→</span> <b>[type="submit"]:</b> Exact attribute match. </div><div class="sub-point"><span class="arrow">→</span> <b>[href^="https"]:</b> Starts with 'https' (secure links). </div><div class="sub-point"><span class="arrow">→</span> <b>[src$=".pdf"]:</b> Ends with '.pdf' (PDF downloads). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">input[type="email"] { border-color: #3b82f6; }</span>
+                    <span class="code-output">:- Styles only email input fields</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Attribute selectors allow styling form inputs without adding extra class names!</div>
+                <div class="mistake-line"><b>Mistake:</b> Typing attribute selectors without brackets (e.g. type="text" instead of [type="text"]).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Precision in selection leads to elegance in design"
+            </div>
+        </div><div class="diary-page" id="day-18">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 18</span>
+                    <span class="topic-title">• Form Styling & CSS Counters</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Professional Form Styling</div>
+                <div class="sub-point"><span class="arrow">→</span> Reset ugly browser defaults: <code>border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 10px 14px;</code> </div><div class="sub-point"><span class="arrow">→</span> Smooth focus transition: <code>input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }</code> <span class="gujarati-note">(ઈનપુટ સિલેક્ટ થાય ત્યારે સુંદર ગ્લો)</span></div><div class="sub-point"><span class="arrow">→</span> Style placeholders: <code>::placeholder { color: #94a3b8; font-style: italic; }</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">input:focus { outline: none; border-color: #2563eb; }</span>
+                    <span class="code-output">:- Professional focused glow effect</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always provide a visual focus state on inputs so users know where their cursor is!</div>
+                <div class="mistake-line"><b>Mistake:</b> Removing browser default outline with outline: none and providing no replacement border focus.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Counters (Automatic Numbering)</div>
+                <div class="sub-point"><span class="arrow">→</span> CSS variables that automatically count items in a page without manual numbering. <span class="gujarati-note">(આપોઆપ ક્રમ આપવો - 1, 2, 3)</span></div><div class="sub-point"><span class="arrow">→</span> <b>counter-reset: name;</b> Initializes counter to 0 (placed on parent container). </div><div class="sub-point"><span class="arrow">→</span> <b>counter-increment: name;</b> Increments counter by 1 on each item. </div><div class="sub-point"><span class="arrow">→</span> <b>content: counter(name);</b> Displays number inside ::before pseudo-element! </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">ol { counter-reset: c; } li::before { counter-increment: c; content: counter(c) '. '; }</span>
+                    <span class="code-output">:- Fully customized list numbering</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> CSS counters are ideal for multi-step wizards (Step 1, Step 2, Step 3)!</div>
+                <div class="mistake-line"><b>Mistake:</b> Placing counter-reset on the list items themselves; the counter will reset to 0 every time!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Small automated touches make code graceful"
+            </div>
+        </div><div class="diary-page" id="day-19">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 19</span>
+                    <span class="topic-title">• Units & Specificity</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Units: Absolute vs Relative</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>px (Pixels):</b> Absolute fixed unit; does not scale with user browser zoom settings. <span class="gujarati-note">(ફિક્સ પિક્સેલ્સ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>rem (Root EM):</b> Relative to root <code>&lt;html&gt;</code> font size (1rem = 16px default). Best for accessible typography! <span class="gujarati-note">(રૂટ ફોન્ટ સાઈઝ ના આધારે - શ્રેષ્ઠ પદ્ધતિ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>em:</b> Relative to parent element font size (can compound unintentionally). </div><div class="sub-point"><span class="arrow">→</span> <b>vw / vh:</b> 1% of Viewport Width / Viewport Height (100vh = full screen height). <span class="gujarati-note">(સ્ક્રીન ની ટકાવારી)</span></div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">h1 { font-size: 2rem; } /* 32px */ body { min-height: 100vh; }</span>
+                    <span class="code-output">:- Scalable heading & full-height page</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use rem for fonts and spacing; use % or vh/vw for responsive layouts!</div>
+                <div class="mistake-line"><b>Mistake:</b> Nesting em units deeply; font size multiplies and becomes unexpectedly huge or tiny.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Specificity Hierarchy</div>
+                <div class="sub-point"><span class="arrow">→</span> Determines which rule wins when multiple CSS rules target the same element. <span class="gujarati-note">(કયો નિયમ જીતશે - priority order)</span></div><div class="sub-point"><span class="arrow">→</span> <b>1. !important:</b> Overrides everything (use sparingly!). </div><div class="sub-point"><span class="arrow">→</span> <b>2. Inline styles:</b> <code>style="..."</code> (Weight: 1000) </div><div class="sub-point"><span class="arrow">→</span> <b>3. ID selector:</b> <code>#header</code> (Weight: 100) </div><div class="sub-point"><span class="arrow">→</span> <b>4. Classes / Attributes:</b> <code>.btn, [type]</code> (Weight: 10) </div><div class="sub-point"><span class="arrow">→</span> <b>5. Elements:</b> <code>p, div</code> (Weight: 1) </div>
+                
+                <div class="diagram-box">!important > Inline (1000) > #id (100) > .class (10) > tag (1)</div>
+                
+                <div class="remember-line"><b>Remember:</b> Higher specificity wins; if specificity is equal, the rule written LATER in the file wins!</div>
+                <div class="mistake-line"><b>Mistake:</b> Overusing !important to patch bugs; it destroys maintainability and cascades into CSS wars.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Measure twice, style once"
+            </div>
+        </div><div class="diary-page" id="day-20">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 20</span>
+                    <span class="topic-title">• Performance & Gradients</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Performance Optimization</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Minimize Reflows & Repaints:</b> Animating <code>transform</code> and <code>opacity</code> uses GPU and is 60fps fast. <span class="gujarati-note">(ઝડપી સ્પીડ - GPU એનિમેશન)</span></div><div class="sub-point"><span class="arrow">→</span> Avoid animating layout properties: <code>top, left, width, height, margin</code> cause slow CPU recalculations. </div><div class="sub-point"><span class="arrow">→</span> Keep selectors shallow (avoid <code>div body #main ul li a span</code>). </div><div class="sub-point"><span class="arrow">→</span> Minify CSS files in production to eliminate whitespace and comments. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">/* Fast */ transform: translateX(100px); /* Slow */ left: 100px;</span>
+                    <span class="code-output">:- Hardware accelerated smooth movement</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always animate transform and opacity for buttery-smooth 60fps animations!</div>
+                <div class="mistake-line"><b>Mistake:</b> Animating margin-left or top; mobile phones will stutter and lag.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Gradients (Linear & Radial)</div>
+                <div class="sub-point"><span class="arrow">→</span> Smooth transitions between two or more colors without downloading heavy images. <span class="gujarati-note">(રંગો નું મિશ્રણ - ઢાળવાળા રંગો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>linear-gradient(direction, color1, color2):</b> <code>to right, #4facfe, #00f2fe;</code> </div><div class="sub-point"><span class="arrow">→</span> <b>radial-gradient(circle, color1, color2):</b> Radiates outward from center. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">background: linear-gradient(135deg, #667eea, #764ba2);</span>
+                    <span class="code-output">:- Elegant modern purple gradient</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Gradients are treated as background-image, not background-color!</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing background-color: linear-gradient(...); (it will be ignored; use background:).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Speed is a feature, and beauty is an asset"
+            </div>
+        </div><div class="diary-page" id="day-21">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 21</span>
+                    <span class="topic-title">• Shadows & Text Effects</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> box-shadow & text-shadow</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>box-shadow:</b> Adds elevation and 3D depth to cards and buttons. <span class="gujarati-note">(કાર્ડ નો પડછાયો - 3D elevation)</span></div><div class="sub-point"><span class="arrow">→</span> Syntax: <code>box-shadow: X Y Blur Spread Color;</code> </div><div class="sub-point"><span class="arrow">→</span> <b>text-shadow:</b> Adds shadow behind letters for contrast on photo backgrounds. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);</span>
+                    <span class="code-output">:- Soft modern card drop-shadow</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use multiple subtle shadows with soft blur for realistic, premium lighting!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using harsh black shadows (like box-shadow: 5px 5px 0 #000); looks 90s and dated.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Text Truncation & Ellipsis (...)</div>
+                <div class="sub-point"><span class="arrow">→</span> When text is too long for a single line, cut it cleanly with three dots (...). <span class="gujarati-note">(લાંબુ લખાણ કાપીને ... બતાવવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Must combine 3 properties:</b> </div><div class="sub-point"><span class="arrow">→</span> 1. <code>white-space: nowrap;</code> (prevents wrapping) </div><div class="sub-point"><span class="arrow">→</span> 2. <code>overflow: hidden;</code> (clips overflow) </div><div class="sub-point"><span class="arrow">→</span> 3. <code>text-overflow: ellipsis;</code> (appends ...) </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">white-space: nowrap; overflow: hidden; text-overflow: ellipsis;</span>
+                    <span class="code-output">:- Shows: 'Very long product title...'</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> All 3 properties are required together; if you miss one, ellipsis will NOT appear!</div>
+                <div class="mistake-line"><b>Mistake:</b> Expecting text-overflow: ellipsis to work without overflow: hidden.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Light and shadow give shape and dimension to flat screens"
+            </div>
+        </div><div class="diary-page" id="day-22">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 22</span>
+                    <span class="topic-title">• 2D & 3D Transforms</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> 2D Transforms: translate, rotate, scale</div>
+                <div class="sub-point"><span class="arrow">→</span> Modifies element shape, size, and position without disrupting document flow. <span class="gujarati-note">(આકાર અને સ્થિતિ બદલવી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>translate(X, Y):</b> Moves element (e.g. <code>translateY(-5px)</code> lifts up). </div><div class="sub-point"><span class="arrow">→</span> <b>rotate(deg):</b> Spins element (e.g. <code>rotate(45deg)</code>). </div><div class="sub-point"><span class="arrow">→</span> <b>scale(N):</b> Enlarges or shrinks (e.g. <code>scale(1.05)</code> zooms 5%). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">button:hover { transform: scale(1.05); }</span>
+                    <span class="code-output">:- Micro-zoom button effect on hover</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Combine multiple transforms in one rule: transform: translate(-50%, -50%) rotate(45deg);</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing two separate transform lines; the second line completely overrides the first!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> 3D Transforms & Perspective</div>
+                <div class="sub-point"><span class="arrow">→</span> Simulates real-world 3D depth along the Z-axis. <span class="gujarati-note">(3D પરિમાણ - ઊંડાણ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>perspective: 1000px;</b> Defines how far the viewer is from the 3D plane (placed on parent). </div><div class="sub-point"><span class="arrow">→</span> <b>rotateX(), rotateY():</b> Flips card along horizontal and vertical axes. </div><div class="sub-point"><span class="arrow">→</span> <b>transform-style: preserve-3d;</b> Keeps children in 3D space (for 3D card flips). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.card:hover { transform: rotateY(180deg); }</span>
+                    <span class="code-output">:- 3D card flip showing backside</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always add perspective to parent container to enable realistic 3D foreshortening!</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting perspective; rotateY will look like a flat shrinking box rather than 3D rotation.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Transformations turn static graphics into lively experiences"
+            </div>
+        </div><div class="diary-page" id="day-23">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 23</span>
+                    <span class="topic-title">• Transitions & Animations</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Transitions (Smooth State Changes)</div>
+                <div class="sub-point"><span class="arrow">→</span> Smoothly animates property changes over time (like on :hover). <span class="gujarati-note">(સરળ ફેરફાર - smooth change)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Shorthand:</b> <code>transition: property duration timing-function delay;</code> </div><div class="sub-point"><span class="arrow">→</span> <b>ease-in-out:</b> Starts slow, speeds up in middle, ends slow for natural feel. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">transition: all 0.3s ease-in-out;</span>
+                    <span class="code-output">:- Smooth 0.3 second hover animation</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Put transition on the BASE class (e.g. .btn), not on :hover, so it animates both ways!</div>
+                <div class="mistake-line"><b>Mistake:</b> Putting transition on :hover only; the hover-in is smooth, but hover-out snaps abruptly.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Keyframe Animations (@keyframes)</div>
+                <div class="sub-point"><span class="arrow">→</span> Creates continuous, multi-step animations without requiring user interaction. <span class="gujarati-note">(આપોઆપ ચાલતી એનિમેશન)</span></div><div class="sub-point"><span class="arrow">→</span> <b>@keyframes name:</b> Defines checkpoints (0%, 50%, 100%). </div><div class="sub-point"><span class="arrow">→</span> <b>animation:</b> <code>name duration timing iteration-count;</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">@keyframes spin { 100% { transform: rotate(360deg); } }<br>.loader { animation: spin 1s linear infinite; }</span>
+                    <span class="code-output">:- Infinite spinning loading spinner</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use iteration-count: infinite for continuous animations like loading spinners!</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting to bind animation-name to the element class after defining @keyframes.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Animation is not the art of drawings that move, but the art of movements that are drawn"
+            </div>
+        </div><div class="diary-page" id="day-24">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 24</span>
+                    <span class="topic-title">• Tooltips & Image Styling</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Pure CSS Tooltips</div>
+                <div class="sub-point"><span class="arrow">→</span> Small popup bubble explaining an icon or button when hovered. <span class="gujarati-note">(માઉસ લઈ જતાં નાની મદદગાર માહિતી બતાવવી)</span></div><div class="sub-point"><span class="arrow">→</span> Built with <code>data-tooltip</code> attribute and <code>::after</code> pseudo-element. </div><div class="sub-point"><span class="arrow">→</span> Positioned with <code>position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.tip:hover::after { content: attr(data-tooltip); opacity: 1; }</span>
+                    <span class="code-output">:- Fades in tooltip text on hover</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use attr(data-tooltip) in CSS content so HTML controls the tooltip text dynamically!</div>
+                <div class="mistake-line"><b>Mistake:</b> Setting z-index too low on tooltip; it ends up hidden behind neighboring cards.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Image Styling: object-fit</div>
+                <div class="sub-point"><span class="arrow">→</span> Controls how an image or video fits inside a container with fixed width/height. <span class="gujarati-note">(ફોટો ખેંચાયા વગર બોક્સમાં ફીટ કરવો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>fill:</b> Default; stretches and distorts image aspect ratio. </div><div class="sub-point"><span class="arrow">→</span> <b>cover:</b> Crops edges to fill the container without distorting proportions! (Best for avatars & cards) <span class="gujarati-note">(પ્રમાણસર કવર કરવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>contain:</b> Letterboxes image so the whole photo is visible without cropping. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">img { width: 100%; height: 250px; object-fit: cover; }</span>
+                    <span class="code-output">:- Perfectly cropped card image without distortion</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always pair fixed height with object-fit: cover on image cards!</div>
+                <div class="mistake-line"><b>Mistake:</b> Squishing images by forcing width & height without object-fit; people look fat or skinny.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Helpful hints make complex interfaces intuitive"
+            </div>
+        </div><div class="diary-page" id="day-25">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 25</span>
+                    <span class="topic-title">• Filters, Clip-path & Multi-columns</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Image Filters & clip-path</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>filter:</b> Visual effects: <code>blur(5px), grayscale(100%), brightness(1.2), drop-shadow()</code>. <span class="gujarati-note">(ઈમેજ ઈફેક્ટ્સ - બ્લેક એન્ડ વ્હાઈટ, બ્લર)</span></div><div class="sub-point"><span class="arrow">→</span> <b>clip-path:</b> Cuts elements into geometric custom shapes (polygons, circles, triangles). <span class="gujarati-note">(ખાસ આકારમાં કાપવું - polygon/circle)</span></div><div class="sub-point"><span class="arrow">→</span> Example: Slanted hero sections via <code>clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);</code> </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">img:hover { filter: grayscale(0%); } img { filter: grayscale(100%); }</span>
+                    <span class="code-output">:- Black & white photo turns vibrant on hover</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> drop-shadow() filter conforms to transparent PNG edges, unlike standard box-shadow!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using box-shadow on a transparent PNG; it casts a shadow around the rectangular box, not the icon.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Multi-column Layout</div>
+                <div class="sub-point"><span class="arrow">→</span> Splits text into newspaper-style multi-column layout. <span class="gujarati-note">(અખબાર જેવા સ્તંભો - newspaper columns)</span></div><div class="sub-point"><span class="arrow">→</span> <b>column-count: 3;</b> Divides text into 3 equal columns. </div><div class="sub-point"><span class="arrow">→</span> <b>column-gap: 30px;</b> Space between adjacent columns. </div><div class="sub-point"><span class="arrow">→</span> <b>column-rule: 1px solid #ccc;</b> Draws vertical dividing line between columns. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.article { column-count: 2; column-gap: 24px; }</span>
+                    <span class="code-output">:- 2-column newspaper layout for article text</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use column-width instead of column-count for responsive auto-adjusting column counts!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using hardcoded column-count: 3 on mobile screens; text columns become unreadably narrow.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Artistic filters and geometric shapes elevate standard layouts into editorial art"
+            </div>
+        </div><div class="diary-page" id="day-26">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 26</span>
+                    <span class="topic-title">• CSS Variables (Custom Properties)</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Declaring & Using CSS Variables</div>
+                <div class="sub-point"><span class="arrow">→</span> Allows defining reusable design values (colors, spacing, font sizes) in one place. <span class="gujarati-note">(વેરીએબલ - એક જગ્યાએ ફેરફાર કરવાથી આખી સાઈટ બદલાય)</span></div><div class="sub-point"><span class="arrow">→</span> Declared with two dashes (<code>--name</code>) inside <code>:root</code> for global scope. </div><div class="sub-point"><span class="arrow">→</span> Accessed using <code>var(--name, fallback)</code>. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">:root { --primary: #3b82f6; }<br>button { background: var(--primary); }</span>
+                    <span class="code-output">:- Uses centralized primary blue variable</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Variables cascade! You can override --primary inside a specific card for thematic coloring.</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting the two dashes '--' prefix when defining CSS custom properties.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Dark Mode with CSS Variables</div>
+                <div class="sub-point"><span class="arrow">→</span> Variables make instant Dark Mode implementation effortless. <span class="gujarati-note">(ડાર્ક મોડ - રાત્રિ મોડ)</span></div><div class="sub-point"><span class="arrow">→</span> Define base theme on <code>:root</code>, then redefine color variables inside <code>[data-theme='dark']</code> or <code>@media (prefers-color-scheme: dark)</code>. </div>
+                
+                <div class="diagram-box">:root {<br>&nbsp;&nbsp;--bg: #ffffff; --text: #1e293b;<br>}<br>[data-theme='dark'] {<br>&nbsp;&nbsp;--bg: #0f172a; --text: #f8fafc;<br>}</div>
+                
+                <div class="remember-line"><b>Remember:</b> All elements using var(--bg) and var(--text) will swap themes instantaneously!</div>
+                <div class="mistake-line"><b>Mistake:</b> Hardcoding hex codes on child elements; they will refuse to change in dark mode.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Don't repeat yourself. Centralize your design tokens"
+            </div>
+        </div><div class="diary-page" id="day-27">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 27</span>
+                    <span class="topic-title">• Flexbox Layout</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Flex Container: Direction & Spacing</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>display: flex;</b> Activates 1-dimensional layout along main and cross axes. <span class="gujarati-note">(એક પરિમાણીય લવચીક ગોઠવણી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>flex-direction:</b> row (horizontal default) or column (vertical stack). <span class="gujarati-note">(આડી કે ઊભી દિશા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>justify-content:</b> Aligns items along main axis (flex-start, center, flex-end, space-between, space-around). </div><div class="sub-point"><span class="arrow">→</span> <b>align-items:</b> Aligns items along cross axis (stretch, center, flex-start). </div><div class="sub-point"><span class="arrow">→</span> <b>gap:</b> Simple space between items (e.g. <code>gap: 16px;</code>). </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">display: flex; justify-content: space-between; align-items: center;</span>
+                    <span class="code-output">:- Items pushed to opposite ends and centered vertically</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> justify-content aligns along main axis; align-items aligns along perpendicular cross axis!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using space-between and then adding margins on items; spacing becomes uneven.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Flex Items: grow, shrink, wrap</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>flex-wrap: wrap;</b> Allows items to wrap onto the next line if space runs out. <span class="gujarati-note">(જગ્યા ન હોય તો બીજી લાઈનમાં જવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>flex-grow: 1;</b> Tells item to expand and take up all remaining available space. </div><div class="sub-point"><span class="arrow">→</span> <b>flex-shrink: 0;</b> Prevents item from being squished when space is tight. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">.input { flex: 1; } .btn { flex-shrink: 0; }</span>
+                    <span class="code-output">:- Search input stretches; search button stays fixed size</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> flex: 1 is shorthand for flex-grow: 1, flex-shrink: 1, flex-basis: 0%!</div>
+                <div class="mistake-line"><b>Mistake:</b> Items overflowing off screen because flex-wrap: wrap was omitted on responsive rows.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Flexibility is the greatest strength in a world of varying screen sizes"
+            </div>
+        </div><div class="diary-page" id="day-28">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">CSS NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 28</span>
+                    <span class="topic-title">• Media Queries & CSS Grid</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Media Queries for Responsive Design</div>
+                <div class="sub-point"><span class="arrow">→</span> Applies CSS rules conditionally based on screen width, height, or orientation. <span class="gujarati-note">(મોબાઈલ અને ડેસ્કટોપ માટે અલગ નિયમ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Mobile First approach:</b> Write default styles for mobile, then add <code>@media (min-width: 768px)</code> for tablets and <code>(min-width: 1024px)</code> for desktop laptops. </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">@media (max-width: 768px) {<br>&nbsp;&nbsp;.nav { flex-direction: column; }<br>}</span>
+                    <span class="code-output">:- Stacks navbar vertically on mobile phones</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always include &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt; in HTML!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using fixed pixel widths inside media query blocks; use percentages or fr units.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> CSS Grid (2D Grid Layout)</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>display: grid;</b> Powerful 2-dimensional system handling rows AND columns simultaneously. <span class="gujarati-note">(દ્વિ-પરિમાણીય ગ્રીડ - રો અને કોલમ બંને)</span></div><div class="sub-point"><span class="arrow">→</span> <b>grid-template-columns:</b> <code>repeat(3, 1fr);</code> (3 equal flexible fractional columns). </div><div class="sub-point"><span class="arrow">→</span> <b>grid-column: 1 / 3;</b> Item spans across 2 columns. <span class="gujarati-note">(બે કોલમ રોકી લેવી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Auto-responsive magic:</b> <code>grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));</code> (no media queries needed!) </div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;</span>
+                    <span class="code-output">:- Responsive auto-wrapping grid cards</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use Flexbox for 1D navigation bars and rows; use CSS Grid for 2D page layouts and card galleries!</div>
+                <div class="mistake-line"><b>Mistake:</b> Trying to build complex 2D dashboard grids using nested flexboxes; CSS Grid does it with 3 lines.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Responsive design is not about designing for devices, but designing for people"
+            </div>
+        </div>
+</body>
+</html>

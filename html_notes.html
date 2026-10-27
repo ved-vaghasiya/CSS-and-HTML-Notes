@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HTML Handwritten Diary Study Notes</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Noto+Sans+Gujarati:wght@500;700&display=swap');
+
+@page {
+    size: 210mm 297mm; /* A4 */
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #2b2b2b;
+    font-family: 'Patrick Hand', 'Noto Sans Gujarati', cursive, sans-serif;
+    color: #173366;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.diary-page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    background-color: #fcfbf6;
+    background-image: 
+        radial-gradient(#ede8db 15%, transparent 16%),
+        radial-gradient(#ede8db 15%, transparent 16%);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+    padding: 14mm 16mm 14mm 26mm;
+    overflow: hidden;
+    page-break-after: always;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    margin: 15px auto;
+}
+
+@media print {
+    body {
+        background: transparent;
+    }
+    .diary-page {
+        margin: 0;
+        box-shadow: none;
+    }
+}
+
+/* Notebook Ruled Lines */
+.ruled-lines-layer {
+    position: absolute;
+    top: 34mm;
+    left: 0;
+    right: 0;
+    bottom: 18mm;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #cbd5e1 31px,
+        #cbd5e1 32px
+    );
+    z-index: 1;
+}
+
+/* Vertical Pink/Red Margin Line */
+.margin-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 22mm;
+    width: 2px;
+    background-color: #f87171;
+    z-index: 2;
+}
+
+.margin-line-secondary {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 23.5mm;
+    width: 1px;
+    background-color: #fca5a5;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+/* Diary Header */
+.diary-header {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2.5px solid #d1d5db;
+    padding-bottom: 4px;
+    margin-bottom: 5mm;
+    margin-left: 2mm;
+}
+
+.header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.day-badge {
+    font-family: 'Caveat', cursive;
+    font-size: 36px;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.topic-title {
+    font-family: 'Caveat', cursive;
+    font-size: 25px;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1;
+}
+
+.header-right {
+    text-align: right;
+    font-family: 'Caveat', cursive;
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.2;
+}
+
+.header-right .year {
+    font-size: 19px;
+    font-weight: 700;
+    color: #334155;
+}
+
+/* Thumb Tab on right edge */
+.diary-tab {
+    position: absolute;
+    right: 0;
+    top: 42mm;
+    background-color: #1e3a8a;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 10px 4px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    border-radius: 6px 0 0 6px;
+    box-shadow: -2px 2px 4px rgba(0,0,0,0.15);
+    letter-spacing: 1.5px;
+    z-index: 10;
+}
+
+/* Content Area */
+.page-content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-left: 3mm;
+}
+
+.topic-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.topic-heading {
+    font-family: 'Caveat', cursive;
+    font-size: 23px;
+    font-weight: 700;
+    color: #162f65;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.topic-heading span.dot {
+    font-size: 20px;
+    color: #1d4ed8;
+}
+
+.sub-point {
+    font-size: 18px;
+    line-height: 1.35;
+    color: #1a3263;
+    margin: 1px 0;
+    padding-left: 8px;
+}
+
+.sub-point .arrow {
+    color: #2563eb;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.gujarati-note {
+    font-family: 'Noto Sans Gujarati', sans-serif;
+    color: #0d47a1;
+    font-size: 15px;
+    background: #eef2ff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.real-life-box {
+    font-size: 17.5px;
+    color: #475569;
+    padding: 2px 10px;
+    margin: 2px 0 2px 8px;
+    border-left: 3px solid #93c5fd;
+    font-style: italic;
+}
+
+.code-row {
+    background: #f1f5f9;
+    border: 1px dashed #94a3b8;
+    border-radius: 5px;
+    padding: 3px 10px;
+    margin: 2px 0 2px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Patrick Hand', monospace;
+    font-size: 17.5px;
+    color: #0f172a;
+}
+
+.code-snippet {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+.code-output {
+    color: #15803d;
+    font-weight: 600;
+    background: #dcfce7;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 17px;
+}
+
+.remember-line {
+    font-size: 17px;
+    color: #1e3a8a;
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+    padding: 2px 8px;
+    margin: 1px 0 1px 8px;
+    border-radius: 0 4px 4px 0;
+}
+
+.mistake-line {
+    font-size: 17px;
+    color: #991b1b;
+    background: #fef2f2;
+    border-left: 3px solid #ef4444;
+    padding: 2px 8px;
+    margin: 1px 0 1px 8px;
+    border-radius: 0 4px 4px 0;
+}
+
+.diagram-box {
+    margin: 3px 0 3px 10px;
+    padding: 4px 10px;
+    border: 1.5px solid #64748b;
+    border-radius: 5px;
+    background: #ffffff;
+    display: inline-block;
+    font-size: 15.5px;
+    color: #1e293b;
+    line-height: 1.25;
+}
+
+.diary-footer {
+    position: absolute;
+    bottom: 7mm;
+    left: 26mm;
+    right: 16mm;
+    text-align: center;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 15.5px;
+    color: #64748b;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 4px;
+    z-index: 5;
+    font-style: italic;
+}
+
+</style>
+</head>
+<body>
+<div class="diary-page" id="day-1">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 1</span>
+                    <span class="topic-title">• HTML Intro & Structure</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> What is HTML?</div>
+                <div class="sub-point"><span class="arrow">→</span> Stands for <u>HyperText Markup Language</u>. </div><div class="sub-point"><span class="arrow">→</span> Gives skeleton structure to a webpage <span class="gujarati-note">(વેબસાઇટ નું કંકાલ / હાડપિંજર - Skeleton of a website)</span></div>
+                <div class="real-life-box">🏠 Real-life: HTML is like the bricks and walls of a house, CSS is paint and interior.</div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;p&gt;My first web page&lt;/p&gt;</span>
+                    <span class="code-output">:- My first web page (shown on screen)</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> HTML is not a programming language; it has no logic or loops, only tags!</div>
+                <div class="mistake-line"><b>Mistake:</b> Thinking HTML alone can make a beautiful website. It only makes the raw skeleton!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Basic HTML Document Structure</div>
+                <div class="sub-point"><span class="arrow">→</span> Every HTML file must follow this exact hierarchy: </div>
+                
+                <div class="diagram-box"><b>&lt;!DOCTYPE html&gt;</b> → Tells browser it's HTML5<br><b>&lt;html&gt;</b> → Root element of page<br>&nbsp;&nbsp;├── <b>&lt;head&gt;</b> → Metadata, title, fonts (invisible to user)<br>&nbsp;&nbsp;└── <b>&lt;body&gt;</b> → Visible content (headings, paragraphs, images)<br><b>&lt;/html&gt;</b></div>
+                <div class="sub-point"><span class="arrow">→</span> &lt;head&gt; = મગજ (brain - settings), &lt;body&gt; = શરીર (visible body) <span class="gujarati-note">(મગજ અને શરીર)</span></div>
+                <div class="code-row">
+                    <span class="code-snippet">&lt;title&gt;My Site&lt;/title&gt;</span>
+                    <span class="code-output">:- Shows on browser tab at top</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Only things inside &lt;body&gt; are shown on the screen!</div>
+                <div class="mistake-line"><b>Mistake:</b> Putting &lt;h1&gt; or &lt;p&gt; inside &lt;head&gt;. Head is ONLY for metadata and title!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Strengthening our identity is one way of reinforcing people's confidence"
+            </div>
+        </div><div class="diary-page" id="day-2">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 2</span>
+                    <span class="topic-title">• Headings & Paragraphs</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> HTML Headings (&lt;h1&gt; to &lt;h6&gt;)</div>
+                <div class="sub-point"><span class="arrow">→</span> Six levels of headings from most important (&lt;h1&gt;) to least (&lt;h6&gt;). </div><div class="sub-point"><span class="arrow">→</span> Search engines like Google use &lt;h1&gt; to understand the main topic <span class="gujarati-note">(મુખ્ય શીર્ષક - Main Heading)</span></div>
+                <div class="real-life-box">📰 Real-life: &lt;h1&gt; is newspaper headline, &lt;h2&gt; is sub-section, &lt;h6&gt; is small footnote.</div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;h1&gt;Main News&lt;/h1&gt; ... &lt;h6&gt;Fine Print&lt;/h6&gt;</span>
+                    <span class="code-output">:- <h1>Main News</h1> ... <h6>Fine Print</h6></span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use only ONE &lt;h1&gt; per page for best SEO! Never skip heading levels.</div>
+                <div class="mistake-line"><b>Mistake:</b> Using &lt;h1&gt; just to make text bold or big. Use CSS for font size, not heading tags!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Paragraphs (&lt;p&gt;), &lt;br&gt; & &lt;hr&gt;</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;p&gt;</b> defines a paragraph of text. Browser adds empty space before and after it. </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;br&gt;</b> breaks line without extra gap <span class="gujarati-note">(નવી લીટી - single line break)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;hr&gt;</b> draws a horizontal dividing line <span class="gujarati-note">(આડી લીટી - thematic divider)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;p&gt;Line 1&lt;br&gt;Line 2&lt;/p&gt;&lt;hr&gt;</span>
+                    <span class="code-output">:- Line 1<br>Line 2<hr style='margin:2px 0'></span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> &lt;br&gt; and &lt;hr&gt; are self-closing void tags (no &lt;/br&gt; needed).</div>
+                <div class="mistake-line"><b>Mistake:</b> Using multiple &lt;br&gt;&lt;br&gt;&lt;br&gt; tags to push items down instead of CSS margin!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Small disciplines repeated with consistency every day lead to great achievements"
+            </div>
+        </div><div class="diary-page" id="day-3">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 3</span>
+                    <span class="topic-title">• Formatting Elements</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Text Formatting Tags</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;b&gt;</b> vs <b>&lt;strong&gt;</b>: Both look bold, but &lt;strong&gt; adds semantic importance for screen readers <span class="gujarati-note">(મહત્વપૂર્ણ અક્ષરો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;i&gt;</b> vs <b>&lt;em&gt;</b>: Both look italic, but &lt;em&gt; adds verbal stress/emphasis <span class="gujarati-note">(ત્રાંસા અક્ષરો)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;b&gt;Bold&lt;/b&gt; &amp; &lt;i&gt;Italic&lt;/i&gt;</span>
+                    <span class="code-output">:- <b>Bold</b> & <i>Italic</i></span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Prefer &lt;strong&gt; and &lt;em&gt; over &lt;b&gt; and &lt;i&gt; for accessibility & SEO.</div>
+                <div class="mistake-line"><b>Mistake:</b> Overusing formatting tags on whole paragraphs instead of specific keywords.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Special Markups: &lt;mark&gt;, &lt;del&gt;, &lt;ins&gt;, &lt;sub&gt;, &lt;sup&gt;</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;mark&gt;</b>: Yellow highlighter effect <span class="gujarati-note">(હાઈલાઈટ કરવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;del&gt;</b> and <b>&lt;ins&gt;</b>: Strikethrough & underline for price discounts/edits <span class="gujarati-note">(જૂનો ભાવ અને નવો ભાવ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;sub&gt;</b> (H<sub>2</sub>O) & <b>&lt;sup&gt;</b> (x<sup>2</sup>): Subscript & Superscript <span class="gujarati-note">(નીચે અને ઉપર લખાણ)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;del&gt;500&lt;/del&gt; &lt;ins&gt;399&lt;/ins&gt; | H&lt;sub&gt;2&lt;/sub&gt;O</span>
+                    <span class="code-output">:- <del>500</del> <ins>399</ins> | H<sub>2</sub>O</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use &lt;del&gt; and &lt;ins&gt; together for showing discounted prices in e-commerce.</div>
+                <div class="mistake-line"><b>Mistake:</b> Confusing &lt;sub&gt; (submarine = goes down) with &lt;sup&gt; (superman = flies up).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Details make perfection, and perfection is not a detail"
+            </div>
+        </div><div class="diary-page" id="day-4">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 4</span>
+                    <span class="topic-title">• Style Attribute & CSS Methods</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> The style Attribute (Inline CSS)</div>
+                <div class="sub-point"><span class="arrow">→</span> Used to style a single specific HTML element directly inside opening tag. </div><div class="sub-point"><span class="arrow">→</span> Syntax: <code>style="property: value;"</code> <span class="gujarati-note">(ટેગ ની અંદર જ સ્ટાઈલ આપવી)</span></div>
+                <div class="real-life-box">👕 Real-life: Wearing custom badge on one shirt vs uniform for whole school.</div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;p style="color: red; font-size: 20px;"&gt;Alert&lt;/p&gt;</span>
+                    <span class="code-output">:- <span style='color:red;'>Alert</span> (in red color)</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always end each CSS property inside style with a semicolon (;)!</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing huge styles in HTML tags. It makes code messy and hard to maintain.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> 3 Ways to Connect CSS to HTML</div>
+                <div class="sub-point"><span class="arrow">→</span> 1. <b>Inline CSS:</b> inside tag via <code>style="..."</code> </div><div class="sub-point"><span class="arrow">→</span> 2. <b>Internal CSS:</b> inside <code>&lt;style&gt;</code> tag within &lt;head&gt; <span class="gujarati-note">(પેજ ના માથામાં)</span></div><div class="sub-point"><span class="arrow">→</span> 3. <b>External CSS:</b> separate <code>.css</code> file connected via <code>&lt;link&gt;</code> in &lt;head&gt; <span class="gujarati-note">(અલગ ફાઈલ જોડીને)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;link rel="stylesheet" href="style.css"&gt;</span>
+                    <span class="code-output">:- Connects external styling file</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> External CSS is best practice for professional production websites!</div>
+                <div class="mistake-line"><b>Mistake:</b> Placing &lt;link&gt; tag inside &lt;body&gt;. It MUST always be inside &lt;head&gt;!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Simplicity is the soul of efficiency"
+            </div>
+        </div><div class="diary-page" id="day-5">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 5</span>
+                    <span class="topic-title">• HTML Linking (&lt;a&gt; tag)</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Hyperlinks & href Attribute</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;a&gt;</b> (Anchor tag) creates clickable links to other pages or websites. </div><div class="sub-point"><span class="arrow">→</span> <b>href:</b> Hypertext Reference (the target URL) <span class="gujarati-note">(લિંક નું સરનામું - Destination URL)</span></div><div class="sub-point"><span class="arrow">→</span> <b>target="_blank":</b> Opens link in a brand new browser tab <span class="gujarati-note">(નવા ટેબમાં ખોલવું)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;a href="https://google.com" target="_blank"&gt;Google&lt;/a&gt;</span>
+                    <span class="code-output">:- Clickable link opening Google</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> When using target="_blank", always add rel="noopener noreferrer" for security!</div>
+                <div class="mistake-line"><b>Mistake:</b> Leaving href empty or writing &lt;a&gt; without href attribute (it won't be clickable).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Special Links: Email, Phone & Bookmarks</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>mailto:</b> Opens default email client <span class="gujarati-note">(ઈમેલ મોકલવા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>tel:</b> Prompts phone dialer on mobile devices <span class="gujarati-note">(ફોન કોલ કરવા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>#id:</b> Jumps to specific section on the same page <span class="gujarati-note">(પેજ ની અંદર કૂદકો મારવો)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;a href="mailto:a@b.com"&gt;Mail&lt;/a&gt; | &lt;a href="#sec1"&gt;Jump&lt;/a&gt;</span>
+                    <span class="code-output">:- Opens email app | Jumps to #sec1</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Bookmark links match the <code>id</code> of the target tag (e.g. href="#top").</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting the '#' symbol in internal bookmark link hrefs!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Connection is the energy that exists between people when they feel seen and heard"
+            </div>
+        </div><div class="diary-page" id="day-6">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 6</span>
+                    <span class="topic-title">• Images (&lt;img&gt; tag)</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Image Embedding & Attributes</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;img&gt;</b> is an empty self-closing tag used to display images on webpage. </div><div class="sub-point"><span class="arrow">→</span> <b>src:</b> Source path (URL or local folder path) of image <span class="gujarati-note">(ફોટા નું સરનામું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>alt:</b> Alternative text displayed if image fails to load <span class="gujarati-note">(ફોટો ન દેખાય તો લખાણ)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;img src="logo.png" alt="College Logo" width="120"&gt;</span>
+                    <span class="code-output">:- Displays 120px wide image</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Never omit the <code>alt</code> attribute! It is critical for blind users & Google SEO.</div>
+                <div class="mistake-line"><b>Mistake:</b> Writing wrong folder path (like missing images/ or typo in image extension .png vs .jpg).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Responsive Images & loading="lazy"</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>width & height:</b> Reserve layout space to prevent page jumping during load. </div><div class="sub-point"><span class="arrow">→</span> <b>loading="lazy":</b> Defers loading image until user scrolls near it <span class="gujarati-note">(પેજ ઝડપી બનાવવું - speed up page)</span></div><div class="sub-point"><span class="arrow">→</span> Always scale proportionally using CSS <code>max-width: 100%; height: auto;</code> </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;img src="banner.jpg" loading="lazy" alt="Banner"&gt;</span>
+                    <span class="code-output">:- Loads only when scrolled into view</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use loading="lazy" on all images below the fold to save user bandwidth!</div>
+                <div class="mistake-line"><b>Mistake:</b> Distorting image aspect ratio by setting both fixed width and fixed height in px.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "A picture is a poem without words"
+            </div>
+        </div><div class="diary-page" id="day-7">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 7</span>
+                    <span class="topic-title">• HTML Tables</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Table Basics: &lt;table&gt;, &lt;tr&gt;, &lt;th&gt;, &lt;td&gt;</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;table&gt;:</b> Container for tabular data (rows & columns). </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;tr&gt;:</b> Table Row <span class="gujarati-note">(ટેબલ ની આડી હરોળ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;th&gt;:</b> Table Header (bold & centered by default) <span class="gujarati-note">(કોલમ નું હેડિંગ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;td&gt;:</b> Table Data cell (regular content) <span class="gujarati-note">(ટેબલ નો ડેટા ખાનું)</span></div>
+                
+                <div class="diagram-box">&lt;table border='1'&gt;<br>&nbsp;&nbsp;&lt;tr&gt;&lt;th&gt;Name&lt;/th&gt;&lt;th&gt;Roll&lt;/th&gt;&lt;/tr&gt;<br>&nbsp;&nbsp;&lt;tr&gt;&lt;td&gt;Ved&lt;/td&gt;&lt;td&gt;101&lt;/td&gt;&lt;/tr&gt;<br>&lt;/table&gt;</div>
+                
+                
+                <div class="remember-line"><b>Remember:</b> A table is constructed strictly ROW BY ROW! Every row starts with &lt;tr&gt;.</div>
+                <div class="mistake-line"><b>Mistake:</b> Putting text directly inside &lt;table&gt; without wrapping in &lt;tr&gt; and &lt;td&gt;.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Merging Cells: colspan & rowspan</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>colspan="N":</b> Merges N columns horizontally into one cell <span class="gujarati-note">(આડા ખાના ભેગા કરવા)</span></div><div class="sub-point"><span class="arrow">→</span> <b>rowspan="N":</b> Merges N rows vertically into one cell <span class="gujarati-note">(ઊભા ખાના ભેગા કરવા)</span></div><div class="sub-point"><span class="arrow">→</span> Semantic tags: <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;tfoot&gt;</code> group header, body, footer. </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;td colspan="2"&gt;Full Address&lt;/td&gt;</span>
+                    <span class="code-output">:- One cell spanning 2 columns</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> When you merge cells using colspan=2, delete the adjacent &lt;td&gt; in that row!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using tables for overall website layouts! Tables are ONLY for tabular data.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Order and structure are the foundations of all good work"
+            </div>
+        </div><div class="diary-page" id="day-8">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 8</span>
+                    <span class="topic-title">• Lists in HTML</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Unordered (&lt;ul&gt;) & Ordered (&lt;ol&gt;) Lists</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;ul&gt;:</b> Bulleted list (dots, circles, squares) <span class="gujarati-note">(બુલેટ લિસ્ટ - ક્રમ વગર)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;ol&gt;:</b> Numbered list (1, A, a, I, i via <code>type</code> attribute) <span class="gujarati-note">(નંબર વાળું લિસ્ટ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;li&gt;:</b> List Item (must be inside &lt;ul&gt; or &lt;ol&gt;) <span class="gujarati-note">(દરેક આઈટમ)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;ol type="A" start="3"&gt;&lt;li&gt;Item&lt;/li&gt;&lt;/ol&gt;</span>
+                    <span class="code-output">:- C. Item (starts numbering from C)</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Only &lt;li&gt; elements can be direct children of &lt;ul&gt; and &lt;ol&gt;!</div>
+                <div class="mistake-line"><b>Mistake:</b> Putting &lt;p&gt; or &lt;div&gt; directly inside &lt;ul&gt; instead of inside &lt;li&gt;.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Description Lists (&lt;dl&gt;) & Nested Lists</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;dl&gt;:</b> Description list for terms & definitions (like a glossary). </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;dt&gt;:</b> Definition Term <span class="gujarati-note">(શબ્દ / ટર્મ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;dd&gt;:</b> Definition Description (automatically indented) <span class="gujarati-note">(શબ્દ નો અર્થ / સમજૂતી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Nested lists:</b> Placing a new &lt;ul&gt; inside an existing &lt;li&gt; creates sub-menus. </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;dl&gt;&lt;dt&gt;HTML&lt;/dt&gt;&lt;dd&gt;Markup Lang&lt;/dd&gt;&lt;/dl&gt;</span>
+                    <span class="code-output">:- HTML<br>&nbsp;&nbsp;&nbsp;&nbsp;Markup Lang</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Nested lists are the foundation of all website navigation dropdown menus!</div>
+                <div class="mistake-line"><b>Mistake:</b> Placing the sub-list between &lt;/li&gt; and &lt;li&gt; instead of INSIDE the parent &lt;li&gt;.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Organization isn't about perfection. It is about efficiency and peace of mind"
+            </div>
+        </div><div class="diary-page" id="day-9">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 9</span>
+                    <span class="topic-title">• Block vs Inline Elements</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Block-level Elements (&lt;div&gt;, &lt;p&gt;, &lt;h1&gt;)</div>
+                <div class="sub-point"><span class="arrow">→</span> Always starts on a <u>new line</u> and takes up the full width available (100%). </div><div class="sub-point"><span class="arrow">→</span> Can have margin, padding, width, and height set in CSS. <span class="gujarati-note">(આખી લાઈન રોકી લે)</span></div><div class="sub-point"><span class="arrow">→</span> Examples: <code>&lt;div&gt;, &lt;p&gt;, &lt;h1&gt;-&lt;h6&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;section&gt;, &lt;form&gt;</code> </div>
+                
+                <div class="diagram-box">[------- Block Element takes 100% width of parent row -------]</div>
+                
+                
+                <div class="remember-line"><b>Remember:</b> &lt;div&gt; is the universal generic block container for grouping elements.</div>
+                <div class="mistake-line"><b>Mistake:</b> Wrapping block elements inside inline elements (like &lt;h1&gt; inside &lt;span&gt;).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Inline Elements (&lt;span&gt;, &lt;a&gt;, &lt;b&gt;)</div>
+                <div class="sub-point"><span class="arrow">→</span> Does <u>NOT</u> start on a new line; takes only as much width as its content. <span class="gujarati-note">(જેટલી જરૂર હોય તેટલી જ જગ્યા)</span></div><div class="sub-point"><span class="arrow">→</span> Top & bottom margin/padding do NOT push adjacent lines away! </div><div class="sub-point"><span class="arrow">→</span> Examples: <code>&lt;span&gt;, &lt;a&gt;, &lt;b&gt;, &lt;i&gt;, &lt;img&gt;, &lt;code&gt;, &lt;strong&gt;</code> </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;span&gt;:</b> Generic inline container for styling specific words in a sentence. </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">Price: &lt;span style="color:green;"&gt;$99&lt;/span&gt;</span>
+                    <span class="code-output">:- Price: <span style='color:green;'>$99</span> (stays in same line)</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use &lt;div&gt; for building boxes/sections; use &lt;span&gt; for coloring words inside text.</div>
+                <div class="mistake-line"><b>Mistake:</b> Trying to apply CSS width and height to inline elements (they will be ignored!).</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Good design is obvious. Great design is transparent"
+            </div>
+        </div><div class="diary-page" id="day-10">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 10</span>
+                    <span class="topic-title">• Iframes & Computer Code Tags</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> HTML &lt;iframe&gt; (Inline Frame)</div>
+                <div class="sub-point"><span class="arrow">→</span> Used to embed another document or website inside the current page. <span class="gujarati-note">(બીજી સાઈટ અંદર બતાવવી)</span></div><div class="sub-point"><span class="arrow">→</span> Commonly used for Google Maps, YouTube video players, and widgets. </div><div class="sub-point"><span class="arrow">→</span> Key attributes: <code>src</code>, <code>width</code>, <code>height</code>, <code>loading="lazy"</code>, <code>sandbox</code> </div>
+                <div class="real-life-box">🪟 Real-life: An iframe is like a glass window inside your room looking into another room.</div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;iframe src="map.html" width="300" height="200"&gt;&lt;/iframe&gt;</span>
+                    <span class="code-output">:- Embeds 300x200 window</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always use the <code>sandbox</code> attribute to prevent malicious scripts from external iframes!</div>
+                <div class="mistake-line"><b>Mistake:</b> Many modern sites (like Google, Facebook) block being embedded in iframes using X-Frame-Options.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Computer Code Tags: &lt;code&gt;, &lt;pre&gt;, &lt;kbd&gt;, &lt;samp&gt;</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;code&gt;:</b> Displays code in monospace font <span class="gujarati-note">(કોડ લખાણ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;pre&gt;:</b> Preserves exact spaces and line breaks as typed <span class="gujarati-note">(જગ્યા અને લાઈન સાચવી રાખે)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;kbd&gt;:</b> Represents keyboard keys <span class="gujarati-note">(કીબોર્ડ ની કી - e.g. Ctrl + C)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;samp&gt;:</b> Represents sample computer terminal output </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">Press &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;C&lt;/kbd&gt; to copy</span>
+                    <span class="code-output">:- Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always wrap multi-line code inside &lt;pre&gt;&lt;code&gt; ... &lt;/code&gt;&lt;/pre&gt;.</div>
+                <div class="mistake-line"><b>Mistake:</b> Expecting &lt;code&gt; alone to preserve spaces; without &lt;pre&gt;, spaces get collapsed into one!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Programs must be written for people to read, and only incidentally for machines to execute"
+            </div>
+        </div><div class="diary-page" id="day-11">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 11</span>
+                    <span class="topic-title">• Semantic HTML Elements</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> What is Semantic HTML?</div>
+                <div class="sub-point"><span class="arrow">→</span> Semantic elements clearly describe their meaning to browser and developer. <span class="gujarati-note">(અર્થપૂર્ણ ટેગ્સ - tags with meaning)</span></div><div class="sub-point"><span class="arrow">→</span> Non-semantic: <code>&lt;div&gt;</code>, <code>&lt;span&gt;</code> (tells nothing about content). </div><div class="sub-point"><span class="arrow">→</span> Semantic: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code> </div>
+                
+                <div class="diagram-box">+---------------------------------------+<br>| &lt;header&gt; Logo & Site Title           |<br>| &lt;nav&gt; Home | About | Contact         |<br>+-------------------+-------------------+<br>| &lt;main&gt;            | &lt;aside&gt; Sidebar  |<br>|   &lt;section&gt;       |   Trending links  |<br>|   &lt;article&gt;       |                   |<br>+-------------------+-------------------+<br>| &lt;footer&gt; Copyright &copy; 2026       |<br>+---------------------------------------+</div>
+                
+                
+                <div class="remember-line"><b>Remember:</b> Semantic tags boost SEO ranking and allow screen readers to navigate effortlessly.</div>
+                <div class="mistake-line"><b>Mistake:</b> Building an entire website using 100 &lt;div&gt; tags ('div soup') instead of semantic tags!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> &lt;section&gt;, &lt;article&gt; & &lt;figure&gt;</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;section&gt;:</b> Thematic grouping of content, usually with a heading. </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;article&gt;:</b> Self-contained, independently distributable post/card <span class="gujarati-note">(સ્વતંત્ર લેખ - blog post/news)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;aside&gt;:</b> Sidebar content tangentially related to main content. </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;figure&gt; & &lt;figcaption&gt;:</b> Self-contained photo with caption underneath. </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;figure&gt;&lt;img src="cat.jpg"&gt;&lt;figcaption&gt;My Cat&lt;/figcaption&gt;&lt;/figure&gt;</span>
+                    <span class="code-output">:- Image paired with caption</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> An &lt;article&gt; should make sense on its own if sent via RSS feed or newsletter.</div>
+                <div class="mistake-line"><b>Mistake:</b> Using &lt;section&gt; as a plain styling wrapper; use &lt;div&gt; for purely visual styling.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Meaningful code makes accessible experiences for everyone"
+            </div>
+        </div><div class="diary-page" id="day-12">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 12</span>
+                    <span class="topic-title">• Entities & Symbols</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> HTML Reserved Character Entities</div>
+                <div class="sub-point"><span class="arrow">→</span> Some characters are reserved in HTML (like &lt; and &gt;) because browsers treat them as tags. <span class="gujarati-note">(ખાસ ચિન્હો - reserved characters)</span></div><div class="sub-point"><span class="arrow">→</span> To display these characters on screen, use <u>entity names</u> starting with & and ending with ; </div><div class="sub-point"><span class="arrow">→</span> <b>&amp;lt;</b> = &lt; (less than) | <b>&amp;gt;</b> = &gt; (greater than) </div><div class="sub-point"><span class="arrow">→</span> <b>&amp;amp;</b> = &amp; (ampersand) | <b>&amp;quot;</b> = " (double quote) </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">To write &lt;p&gt;, code: &amp;lt;p&amp;gt;</span>
+                    <span class="code-output">:- Shows &lt;p&gt; literally on screen</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always use &amp;nbsp; when you need a non-breaking space between two words!</div>
+                <div class="mistake-line"><b>Mistake:</b> Typing literal '<' in paragraph text; older browsers may interpret it as an unclosed tag!</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Symbols & Emoji Codes</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>Copyright:</b> <code>&amp;copy;</code> :- &copy; | <b>Registered:</b> <code>&amp;reg;</code> :- &reg; </div><div class="sub-point"><span class="arrow">→</span> <b>Trademark:</b> <code>&amp;trade;</code> :- &trade; | <b>Euro / Pound:</b> <code>&amp;euro; &amp;pound;</code> :- &euro; &pound; </div><div class="sub-point"><span class="arrow">→</span> <b>Emojis:</b> Encoded via UTF-8 decimal code (e.g. <code>&amp;#128512;</code> = &#128512;) <span class="gujarati-note">(ઈમોજી કોડ)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&amp;copy; 2026 Coding Gita &amp;#10084;</span>
+                    <span class="code-output">:- &copy; 2026 Coding Gita &#10084;</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Ensure &lt;meta charset="UTF-8"&gt; is present in &lt;head&gt; so all symbols and emojis render!</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting the trailing semicolon (;) on entities like typing &amp;copy without ';'!</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Every symbol carries a story, every character has a place"
+            </div>
+        </div><div class="diary-page" id="day-13">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 13</span>
+                    <span class="topic-title">• Forms Part 1: Basics & Inputs</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> The &lt;form&gt; Element & HTTP Methods</div>
+                <div class="sub-point"><span class="arrow">→</span> Used to collect user data and send it to server for processing. <span class="gujarati-note">(યુઝર ડેટા ફોર્મ - collecting user data)</span></div><div class="sub-point"><span class="arrow">→</span> <b>action:</b> URL where form data is submitted to. </div><div class="sub-point"><span class="arrow">→</span> <b>method:</b> HTTP method: <u>GET</u> (shows in URL) vs <u>POST</u> (secure, hidden body) </div>
+                <div class="real-life-box">📮 Real-life: GET is like a public postcard; POST is like a sealed, private envelope.</div>
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;form action="/login" method="POST"&gt; ... &lt;/form&gt;</span>
+                    <span class="code-output">:- Submits private payload securely</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Use POST for passwords, credit cards, or large data; use GET for search forms!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using method="GET" for login passwords (it exposes password directly in URL history!).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Core Input Types (&lt;input&gt;)</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>type="text":</b> Single line text field <span class="gujarati-note">(ટેક્સ્ટ બોક્સ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>type="password":</b> Masks characters as dots/asterisks <span class="gujarati-note">(પાસવર્ડ બોક્સ - ગુપ્ત અક્ષરો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>type="email":</b> Automatically validates email format (@ symbol) </div><div class="sub-point"><span class="arrow">→</span> <b>type="number":</b> Numbers only with min, max, and step controls </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;input type="email" name="user_email" required&gt;</span>
+                    <span class="code-output">:- Input field with email validation</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Every input MUST have a <code>name</code> attribute, or its value will NOT be sent to server!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using type="text" for phone/passwords instead of specialized type="tel" or "password".</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Listening to user input is the starting point of every interactive system"
+            </div>
+        </div><div class="diary-page" id="day-14">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 14</span>
+                    <span class="topic-title">• Forms Part 2: Controls & Options</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Radio, Checkbox & Dropdown</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>type="radio":</b> Select ONLY ONE option from a group (must share same <code>name</code>). <span class="gujarati-note">(એક જ પસંદગી - Gender/Option)</span></div><div class="sub-point"><span class="arrow">→</span> <b>type="checkbox":</b> Select MULTIPLE options independently <span class="gujarati-note">(એકથી વધુ પસંદગી)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;select&gt; &amp; &lt;option&gt;:</b> Dropdown selection menu <span class="gujarati-note">(ડ્રોપડાઉન લિસ્ટ)</span></div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;input type="radio" name="g" value="m"&gt; Male</span>
+                    <span class="code-output">:- ( ) Male (radio selection dot)</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Radio buttons must share the exact same <code>name</code> to make them mutually exclusive!</div>
+                <div class="mistake-line"><b>Mistake:</b> Giving different name attributes to related radio buttons (user will be able to select all!).</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> &lt;label&gt;, &lt;textarea&gt; & Attributes</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>&lt;label for="id"&gt;:</b> Clicking text focuses the corresponding input box. <span class="gujarati-note">(ટેક્સ્ટ પર ક્લિક કરવાથી બોક્સ સિલેક્ટ થાય)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;textarea rows="4"&gt;:</b> Multi-line text input for comments/messages. </div><div class="sub-point"><span class="arrow">→</span> <b>Attributes:</b> <code>placeholder</code> (hint), <code>required</code> (mandatory), <code>disabled</code>, <code>value</code> </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;label for="n"&gt;Name&lt;/label&gt;&lt;input id="n" required&gt;</span>
+                    <span class="code-output">:- Accessible label bound to input</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always pair every input with a &lt;label&gt; using <code>for</code> and <code>id</code> for accessibility!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using placeholder as a replacement for label. Placeholders disappear when user types.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "User experience is about making interactions effortless and self-evident"
+            </div>
+        </div><div class="diary-page" id="day-15">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 15</span>
+                    <span class="topic-title">• Audio & Video Media</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Embedding Audio (&lt;audio&gt;)</div>
+                <div class="sub-point"><span class="arrow">→</span> Used to play sound files (mp3, wav, ogg) on webpage without external plugins. <span class="gujarati-note">(ઓડિયો / ગીત વગાડવું)</span></div><div class="sub-point"><span class="arrow">→</span> <b>controls:</b> Displays play, pause, and volume bar. </div><div class="sub-point"><span class="arrow">→</span> <b>&lt;source src="..." type="audio/mpeg"&gt;:</b> Provides fallback audio formats. </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;audio controls&gt;&lt;source src="a.mp3"&gt;&lt;/audio&gt;</span>
+                    <span class="code-output">:- Audio player with play button</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Always include the <code>controls</code> attribute, otherwise the audio player is completely invisible!</div>
+                <div class="mistake-line"><b>Mistake:</b> Using <code>autoplay</code> with sound; modern browsers block audio autoplay to protect users.</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Embedding Video (&lt;video&gt;)</div>
+                <div class="sub-point"><span class="arrow">→</span> Used to embed video clips (mp4, webm). <span class="gujarati-note">(વિડીયો પ્લેયર - video on page)</span></div><div class="sub-point"><span class="arrow">→</span> <b>poster="img.jpg":</b> Thumbnail image displayed before video plays. <span class="gujarati-note">(વિડીયો શરૂ થતા પહેલા નો ફોટો)</span></div><div class="sub-point"><span class="arrow">→</span> <b>attributes:</b> <code>controls</code>, <code>autoplay muted</code>, <code>loop</code>, <code>width="640"</code> </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;video controls poster="thumb.jpg" width="400"&gt;&lt;/video&gt;</span>
+                    <span class="code-output">:- Video box with thumbnail</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> If you want video to autoplay on page load, you MUST add <code>muted</code>!</div>
+                <div class="mistake-line"><b>Mistake:</b> Uploading huge raw 4K video files directly; compress to WebM or stream via YouTube/Vimeo.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "Multimedia brings the web alive, connecting sight and sound"
+            </div>
+        </div><div class="diary-page" id="day-16">
+            <div class="margin-line"></div>
+            <div class="margin-line-secondary"></div>
+            <div class="ruled-lines-layer"></div>
+            <div class="diary-tab">HTML NOTES</div>
+
+            <div class="diary-header">
+                <div class="header-left">
+                    <span class="day-badge">Day 16</span>
+                    <span class="topic-title">• Meta Tags & SEO Head</span>
+                </div>
+                <div class="header-right">
+                    <div class="year">2026 • CSE (AI)</div>
+                    <div>SEMESTER 1 • DIARY NOTES</div>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> Essential Meta Tags in &lt;head&gt;</div>
+                <div class="sub-point"><span class="arrow">→</span> Meta tags live inside <code>&lt;head&gt;</code> and supply metadata to browsers & search engines. <span class="gujarati-note">(પેજ ની છુપી માહિતી - metadata)</span></div><div class="sub-point"><span class="arrow">→</span> <b>charset="UTF-8":</b> Supports all languages (English, Gujarati, Hindi, Emoji). </div><div class="sub-point"><span class="arrow">→</span> <b>viewport:</b> <code>content="width=device-width, initial-scale=1.0"</code> enables mobile responsiveness! <span class="gujarati-note">(મોબાઈલ સ્ક્રીન સાઈઝ સેટિંગ)</span></div>
+                
+                <div class="diagram-box">&lt;meta charset="UTF-8"&gt;<br>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br>&lt;meta name="description" content="Best HTML Study Notes"&gt;</div>
+                
+                
+                <div class="remember-line"><b>Remember:</b> Without the viewport meta tag, mobile phones will display desktop sites tiny and zoomed-out!</div>
+                <div class="mistake-line"><b>Mistake:</b> Forgetting charset="UTF-8" leads to Gujarati or Hindi characters turning into garbage symbols ().</div>
+            </div><div class="topic-block">
+                <div class="topic-heading"><span class="dot">•</span> SEO & Social Sharing Meta Tags</div>
+                <div class="sub-point"><span class="arrow">→</span> <b>meta description:</b> The 1-2 sentence snippet displayed in Google search results. <span class="gujarati-note">(ગૂગલ સર્ચ રિઝલ્ટ લખાણ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>Open Graph (og:title, og:image):</b> Controls title & preview card when shared on WhatsApp/Twitter. <span class="gujarati-note">(વોટ્સએપ શેરિંગ કાર્ડ)</span></div><div class="sub-point"><span class="arrow">→</span> <b>&lt;link rel="icon" href="favicon.ico"&gt;:</b> Displays small logo on browser tab. </div>
+                
+                
+                
+                <div class="code-row">
+                    <span class="code-snippet">&lt;meta name="description" content="Free CSE Web Dev Notes"&gt;</span>
+                    <span class="code-output">:- Sets Google search snippet</span>
+                </div>
+                <div class="remember-line"><b>Remember:</b> Keep meta description between 150-160 characters so Google does not cut it off!</div>
+                <div class="mistake-line"><b>Mistake:</b> Stuffing 50 repetitive keywords in meta keywords tag; Google ignores keyword tags today.</div>
+            </div>
+            </div>
+
+            <div class="diary-footer">
+                "What is unseen often provides the power for everything that is seen"
+            </div>
+        </div>
+</body>
+</html>

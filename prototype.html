@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Noto+Sans+Gujarati:wght@500;700&display=swap');
+
+@page {
+    size: 210mm 297mm; /* A4 */
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f7f5ee;
+    font-family: 'Patrick Hand', 'Noto Sans Gujarati', cursive, sans-serif;
+    color: #173366;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.diary-page {
+    width: 210mm;
+    height: 297mm;
+    position: relative;
+    background-color: #fcfbf6;
+    background-image: 
+        radial-gradient(#ede8db 15%, transparent 16%),
+        radial-gradient(#ede8db 15%, transparent 16%);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+    padding: 16mm 18mm 16mm 28mm;
+    overflow: hidden;
+    page-break-after: always;
+}
+
+/* Notebook Ruled Lines */
+.ruled-lines-layer {
+    position: absolute;
+    top: 36mm;
+    left: 0;
+    right: 0;
+    bottom: 20mm;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        transparent,
+        transparent 31px,
+        #cbd5e1 31px,
+        #cbd5e1 32px
+    );
+    z-index: 1;
+}
+
+/* Vertical Pink/Red Margin Line */
+.margin-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 24mm;
+    width: 2px;
+    background-color: #f87171;
+    z-index: 2;
+}
+
+.margin-line-secondary {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 25.5mm;
+    width: 1px;
+    background-color: #fca5a5;
+    opacity: 0.5;
+    z-index: 2;
+}
+
+/* Diary Header */
+.diary-header {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2.5px solid #d1d5db;
+    padding-bottom: 5px;
+    margin-bottom: 6mm;
+    margin-left: 2mm;
+}
+
+.header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.day-badge {
+    font-family: 'Caveat', cursive;
+    font-size: 38px;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1;
+    letter-spacing: 0.5px;
+}
+
+.topic-title {
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1e3a8a;
+    line-height: 1;
+}
+
+.header-right {
+    text-align: right;
+    font-family: 'Caveat', cursive;
+    font-size: 16px;
+    color: #64748b;
+    line-height: 1.2;
+}
+
+.header-right .year {
+    font-size: 20px;
+    font-weight: 700;
+    color: #334155;
+}
+
+/* Thumb Tab on right edge */
+.diary-tab {
+    position: absolute;
+    right: 0;
+    top: 45mm;
+    background-color: #3b5998;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 10px 4px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    border-radius: 6px 0 0 6px;
+    box-shadow: -2px 2px 4px rgba(0,0,0,0.15);
+    letter-spacing: 1.5px;
+    z-index: 10;
+}
+
+/* Content Area */
+.page-content {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-left: 3mm;
+}
+
+/* Individual Topic Block */
+.topic-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.topic-heading {
+    font-family: 'Caveat', cursive;
+    font-size: 24px;
+    font-weight: 700;
+    color: #162f65;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.topic-heading span.dot {
+    font-size: 22px;
+    color: #1d4ed8;
+}
+
+.sub-point {
+    font-size: 19px;
+    line-height: 1.4;
+    color: #1a3263;
+    margin: 1px 0;
+    padding-left: 10px;
+}
+
+.sub-point .arrow {
+    color: #2563eb;
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.gujarati-note {
+    font-family: 'Noto Sans Gujarati', sans-serif;
+    color: #0d47a1;
+    font-size: 15.5px;
+    background: #eef2ff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.real-life-box {
+    font-size: 18px;
+    color: #475569;
+    padding: 2px 10px;
+    margin: 2px 0 2px 8px;
+    border-left: 3px solid #93c5fd;
+    font-style: italic;
+}
+
+.code-row {
+    background: #f1f5f9;
+    border: 1px dashed #94a3b8;
+    border-radius: 5px;
+    padding: 4px 10px;
+    margin: 3px 0 3px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Courier Prime', 'Patrick Hand', monospace;
+    font-size: 18px;
+    color: #0f172a;
+}
+
+.code-snippet {
+    color: #1e3a8a;
+    font-weight: 600;
+}
+
+.code-output {
+    color: #15803d;
+    font-weight: 600;
+    background: #dcfce7;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 18px;
+}
+
+.rules-line {
+    font-size: 18px;
+    line-height: 1.35;
+    padding-left: 10px;
+    color: #1e293b;
+}
+
+.underline-word {
+    text-decoration: underline;
+    text-decoration-color: #2563eb;
+    text-decoration-thickness: 1.5px;
+    font-weight: 600;
+}
+
+.remember-line {
+    font-size: 17.5px;
+    color: #1e3a8a;
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+    padding: 3px 8px;
+    margin: 2px 0 1px 10px;
+    border-radius: 0 4px 4px 0;
+}
+
+.mistake-line {
+    font-size: 17.5px;
+    color: #991b1b;
+    background: #fef2f2;
+    border-left: 3px solid #ef4444;
+    padding: 3px 8px;
+    margin: 1px 0 2px 10px;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Small Diagrams */
+.diagram-box {
+    margin: 4px 0 4px 12px;
+    padding: 6px 10px;
+    border: 1.5px solid #64748b;
+    border-radius: 6px;
+    background: #ffffff;
+    display: inline-block;
+    font-size: 16px;
+    color: #1e293b;
+    line-height: 1.3;
+}
+
+/* Diary Footer Quote */
+.diary-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 28mm;
+    right: 18mm;
+    text-align: center;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 16px;
+    color: #64748b;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 5px;
+    z-index: 5;
+    font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<div class="diary-page">
+    <div class="margin-line"></div>
+    <div class="margin-line-secondary"></div>
+    <div class="ruled-lines-layer"></div>
+    <div class="diary-tab">HTML NOTES</div>
+
+    <div class="diary-header">
+        <div class="header-left">
+            <span class="day-badge">Day 1</span>
+            <span class="topic-title">• HTML Intro & Structure</span>
+        </div>
+        <div class="header-right">
+            <div class="year">2026 • CSE (AI)</div>
+            <div>SEMESTER 1 • DIARY NOTES</div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <!-- Topic 1 -->
+        <div class="topic-block">
+            <div class="topic-heading"><span class="dot">•</span> What is HTML?</div>
+            <div class="sub-point"><span class="arrow">→</span> Stands for <u>HyperText Markup Language</u>.</div>
+            <div class="sub-point"><span class="arrow">→</span> Gives structure to a webpage <span class="gujarati-note">(વેબસાઇટ નું કંકાલ / હાડપિંજર - Skeleton of a website)</span>.</div>
+            <div class="real-life-box">🏠 Real-life: HTML is like the bricks and walls of a house, CSS is paint and interior.</div>
+            <div class="code-row">
+                <span class="code-snippet">&lt;p&gt;My first web page&lt;/p&gt;</span>
+                <span class="code-output">:- My first web page (shown on screen)</span>
+            </div>
+            <div class="remember-line"><b>Remember:</b> HTML is not a programming language; it has no logic or loops, only tags!</div>
+            <div class="mistake-line"><b>Mistake:</b> Thinking HTML alone can make a beautiful website. It only makes the raw skeleton!</div>
+        </div>
+
+        <!-- Topic 2 -->
+        <div class="topic-block">
+            <div class="topic-heading"><span class="dot">•</span> Basic HTML Document Structure</div>
+            <div class="sub-point"><span class="arrow">→</span> Every HTML file must follow this exact hierarchy:</div>
+            <div class="diagram-box">
+                <b>&lt;!DOCTYPE html&gt;</b> → Tells browser it's HTML5<br>
+                <b>&lt;html&gt;</b> → Root element of page<br>
+                &nbsp;&nbsp;├── <b>&lt;head&gt;</b> → Metadata, title, fonts (invisible to user)<br>
+                &nbsp;&nbsp;└── <b>&lt;body&gt;</b> → Visible content (headings, paragraphs, images)<br>
+                <b>&lt;/html&gt;</b>
+            </div>
+            <div class="sub-point"><span class="arrow">→</span> <span class="gujarati-note">&lt;head&gt; = મગજ (brain - settings), &lt;body&gt; = શરીર (visible body)</span></div>
+            <div class="code-row">
+                <span class="code-snippet">&lt;title&gt;My Site&lt;/title&gt;</span>
+                <span class="code-output">:- Shows on browser tab at top</span>
+            </div>
+            <div class="remember-line"><b>Remember:</b> Only things inside &lt;body&gt; are shown on the screen!</div>
+            <div class="mistake-line"><b>Mistake:</b> Putting &lt;h1&gt; or &lt;p&gt; inside &lt;head&gt;. Head is ONLY for metadata and title!</div>
+        </div>
+    </div>
+
+    <div class="diary-footer">
+        "Strengthening our identity is one way of reinforcing people's confidence"
+    </div>
+</div>
+
+</body>
+</html>
